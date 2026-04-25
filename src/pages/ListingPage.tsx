@@ -15,7 +15,7 @@ const ListingPage = () => {
       <main className="mx-auto max-w-6xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
-        {/* filters + car list */}
+        {/* todo filters + car listing */}
       </main>
     </div>
   );
