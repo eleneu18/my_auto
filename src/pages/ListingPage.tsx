@@ -4,6 +4,9 @@ import CarCard from "../features/listings/components/CarCard";
 import FilterSidebar from "../features/listings/components/FilterSidebar";
 import ListingToolbar from "../features/listings/components/ListingToolbar";
 
+import { useProducts } from "../features/listings/hooks/useProducts";
+import { buildImageUrl } from "../features/listings/utils/buildImageUrl";
+
 const breadcrumbItems = [
   { label: "მთავარი", href: "/" },
   { label: "ავტო", href: "/ka" },
@@ -11,6 +14,8 @@ const breadcrumbItems = [
 ];
 
 const ListingPage = () => {
+  const { products, total, isLoading, error } = useProducts();
+
   return (
     <div className="min-h-screen bg-[#f2f3f6]">
       <Header />
@@ -21,55 +26,31 @@ const ListingPage = () => {
         <div className="flex gap-5 w-full">
           <FilterSidebar />
           <div className="space-y-3 w-full">
-            <ListingToolbar totalCount={100} />
-            <CarCard
-              imageUrl=""
-              title="LAND ROVER Range Rover Evoque"
-              year={2013}
-              price={108122}
-              mileageKm={173000}
-              engine="3.0 ბენზინი"
-              transmission="ავტომატიკა"
-              location="თბილისი"
-              customsPassed
-              isVip
-            />
-            <CarCard
-              imageUrl=""
-              title="LAND ROVER Range Rover Evoque"
-              year={2013}
-              price={108122}
-              mileageKm={173000}
-              engine="3.0 ბენზინი"
-              transmission="ავტომატიკა"
-              location="თბილისი"
-              customsPassed
-              isVip
-            />
-            <CarCard
-              imageUrl=""
-              title="LAND ROVER Range Rover Evoque"
-              year={2013}
-              price={108122}
-              mileageKm={173000}
-              engine="3.0 ბენზინი"
-              transmission="ავტომატიკა"
-              location="თბილისი"
-              customsPassed
-              isVip
-            />
-            <CarCard
-              imageUrl=""
-              title="LAND ROVER Range Rover Evoque"
-              year={2013}
-              price={108122}
-              mileageKm={173000}
-              engine="3.0 ბენზინი"
-              transmission="ავტომატიკა"
-              location="თბილისი"
-              customsPassed
-              isVip
-            />
+            <ListingToolbar totalCount={total} />
+            {isLoading && (
+              <p className="text-[13px] text-[#6F7383]">იტვირთება...</p>
+            )}
+            {error && <p className="text-[13px] text-[#FD4100]">{error}</p>}
+
+            {!isLoading && !error && (
+              <div className="space-y-3">
+                {products.map((product) => (
+                  <CarCard
+                    key={product.car_id}
+                    imageUrl={buildImageUrl(product)}
+                    title={product.car_model || `მანქანა #${product.car_id}`}
+                    year={product.prod_year}
+                    price={product.price_value || product.price}
+                    mileageKm={product.car_run_km}
+                    engine={`${product.engine_volume / 1000} ძრავი`}
+                    transmission={`კოლოფი #${product.gear_type_id}`}
+                    location="თბილისი"
+                    customsPassed={product.customs_passed}
+                    isVip={false}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>
