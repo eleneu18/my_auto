@@ -93,7 +93,7 @@ const FilterSidebar = ({
         })}
       </div>
 
-      <div className="space-y-5 px-6 py-6">
+      <div className="space-y-5 p-6 pt-[22px]">
         <FilterSelect
           label="გარიგების ტიპი"
           value={draft.forRent === undefined ? "" : String(draft.forRent)}
@@ -138,7 +138,7 @@ const FilterSidebar = ({
         />
       </div>
 
-      <div className="border-t border-[#E9EBF0] px-6 py-6">
+      <div className="border-t border-[#E9E9F0] pt-[17px] px-6 pb-[44px]">
         <div className="mb-5 flex items-center justify-between">
           <h3 className="text-[14px] font-bold leading-none text-[#272A37]">
             ფასი
@@ -178,11 +178,11 @@ const FilterSidebar = ({
         </div>
       </div>
 
-      <div className="bg-white px-6 py-6 shadow-[0_-8px_18px_rgba(39,42,55,0.05)]">
+      <div className="bg-white pt-4 pb-5 px-[23px] shadow-[0_-8px_18px_rgba(39,42,55,0.05)]">
         <button
           type="button"
           onClick={() => onApply(draft)}
-          className="h-[48px] w-full rounded-[8px] bg-[#FD4100] text-[15px] font-bold text-white transition hover:bg-[#e83b00]"
+          className="h-8 w-full rounded-md bg-[#FD4100] font-tbcx text-[14px] font-bold leading-none text-white transition hover:bg-[#e83b00]"
         >
           ძებნა {totalCount.toLocaleString("ka-GE")}
         </button>
