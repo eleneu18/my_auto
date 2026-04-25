@@ -1,4 +1,4 @@
-import arrowRight from "../../../assets/images/arrow-right.svg";
+import arrowRight from "../../../assets/images/arrow-icon.svg";
 
 type BreadcrumbItem = {
   label: string;

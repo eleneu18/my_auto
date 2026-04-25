@@ -2,6 +2,7 @@ import Header from "../features/listings/components/Header";
 import Breadcrumb from "../features/listings/components/Breadcrumb";
 import CarCard from "../features/listings/components/CarCard";
 import FilterSidebar from "../features/listings/components/FilterSidebar";
+import ListingToolbar from "../features/listings/components/ListingToolbar";
 
 const breadcrumbItems = [
   { label: "მთავარი", href: "/" },
@@ -17,9 +18,10 @@ const ListingPage = () => {
       <main className="mx-auto max-w-6xl px-4 py-6">
         <Breadcrumb items={breadcrumbItems} />
 
-        <div className="flex gap-5">
+        <div className="flex gap-5 w-full">
           <FilterSidebar />
-          <div className="max-w-[760px] space-y-3">
+          <div className="space-y-3 w-full">
+            <ListingToolbar totalCount={100} />
             <CarCard
               imageUrl=""
               title="LAND ROVER Range Rover Evoque"
