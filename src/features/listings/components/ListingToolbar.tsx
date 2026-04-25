@@ -109,7 +109,7 @@ const ToolbarSelect = <T extends string | number>({
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="flex h-[40px] min-w-[156px] items-center justify-between gap-4 rounded-[8px] bg-white px-4 text-[12px] font-medium text-[#454857] shadow-[0_2px_8px_rgba(39,42,55,0.06)]"
+        className="flex h-[40px] min-w-[156px] items-center justify-between gap-4 rounded-[10px] border border-[#D8DBE2] bg-white px-4 font-tbcx text-[13px] font-medium text-[#454857]"
       >
         <span>{value}</span>
         <span className="text-[#6F7383]">⌄</span>
@@ -118,7 +118,7 @@ const ToolbarSelect = <T extends string | number>({
       {isOpen && (
         <div
           className={[
-            "absolute top-[48px] z-20 w-[188px] overflow-hidden rounded-[8px] bg-white py-2 shadow-[0_8px_24px_rgba(39,42,55,0.12)]",
+            "absolute top-[48px] z-20 w-[180px] overflow-hidden rounded-[10px] border border-[#D8DBE2] bg-white py-2 shadow-[0_12px_28px_rgba(39,42,55,0.14)]",
             align === "right" ? "right-0" : "left-0",
           ].join(" ")}
         >
@@ -134,7 +134,7 @@ const ToolbarSelect = <T extends string | number>({
                   setIsOpen(false);
                 }}
                 className={[
-                  "flex h-[36px] w-full items-center justify-between px-4 text-left text-[12px] transition hover:bg-[#F5F6F8]",
+                  "flex h-[44px] w-full items-center px-5 text-left font-tbcx text-[16px] font-medium text-[#6F7383] transition hover:bg-[#F5F6F8]",
                   isSelected
                     ? "font-bold text-[#272A37]"
                     : "font-medium text-[#6F7383]",

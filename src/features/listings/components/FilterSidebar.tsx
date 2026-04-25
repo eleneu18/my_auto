@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import carIcon from "../../../assets/images/car-icon.svg";
 import gelIcon from "../../../assets/images/gel-icon.svg";
@@ -97,16 +97,17 @@ const FilterSidebar = ({
         <FilterSelect
           label="გარიგების ტიპი"
           value={draft.forRent === undefined ? "" : String(draft.forRent)}
+          options={[
+            { label: "ყველა", value: "" },
+            { label: "იყიდება", value: "0" },
+            { label: "ქირავდება", value: "1" },
+          ]}
           onChange={(value) =>
             updateDraft({
               forRent: value === "" ? undefined : (Number(value) as 0 | 1),
             })
           }
-        >
-          <option value="">ყველა</option>
-          <option value="0">იყიდება</option>
-          <option value="1">ქირავდება</option>
-        </FilterSelect>
+        />
 
         <MultiSelectDropdown
           label="მწარმოებელი"
@@ -190,33 +191,70 @@ const FilterSidebar = ({
   );
 };
 
+type FilterSelectOption = {
+  label: string;
+  value: string;
+};
 type FilterSelectProps = {
   label: string;
   value: string;
+  options: FilterSelectOption[];
   onChange: (value: string) => void;
-  children: React.ReactNode;
 };
 
 const FilterSelect = ({
   label,
   value,
+  options,
   onChange,
-  children,
 }: FilterSelectProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const selectedOption =
+    options.find((option) => option.value === value) ?? options[0];
+  useEffect(() => {
+    if (!isOpen) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!dropdownRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isOpen]);
   return (
-    <label className="block">
+    <div className="relative" ref={dropdownRef}>
       <span className="mb-2 block font-tbcx text-[12px] font-medium leading-none text-[#272A37]">
         {label}
       </span>
-
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-[44px] w-full appearance-none rounded-[10px] border border-[#D8DBE2] bg-white px-4 text-[13px] font-medium text-[#272A37] outline-none transition focus:border-[#6F7383]"
+      <button
+        type="button"
+        onClick={() => setIsOpen((current) => !current)}
+        className="flex h-[44px] w-full items-center justify-between rounded-[10px] border border-[#D8DBE2] bg-white px-4 font-tbcx text-[13px] font-medium text-[#272A37]"
       >
-        {children}
-      </select>
-    </label>
+        <span>{selectedOption.label}</span>
+        <span className="text-[#6F7383]">{isOpen ? "⌃" : "⌄"}</span>
+      </button>
+      {isOpen && (
+        <div className="w-full absolute left-0 top-[72px] z-30 w-[180px] overflow-hidden rounded-[10px] border border-[#D8DBE2] bg-white py-2 shadow-[0_12px_28px_rgba(39,42,55,0.14)]">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+              className="block h-[44px] w-full px-5 text-left font-tbcx text-[16px] font-medium text-[#6F7383] transition hover:bg-[#F5F6F8]"
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
