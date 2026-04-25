@@ -184,7 +184,7 @@ const FilterSidebar = ({
             onChange={(priceFrom) => updateDraft({ priceFrom })}
           />
 
-          <span className="h-px w-3 bg-[#D8DBE2]" />
+          <span className="w-[6px] h-[2px] bg-[#8C929B] rounded-lg" />
 
           <PriceInput
             placeholder="მდე"
