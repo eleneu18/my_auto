@@ -17,10 +17,7 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => {
           const isLast = index === items.length - 1;
 
           return (
-            <li
-              key={`${item.label}-${index}`}
-              className="flex items-center"
-            >
+            <li key={`${item.label}-${index}`} className="flex items-center">
               {item.href && !isLast ? (
                 <a
                   href={item.href}
@@ -39,14 +36,14 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => {
 
               {!isLast && (
                 <img
-                    src={arrowRight}
-                    alt=""
-                    aria-hidden="true"
-                    className="h-[6px] w-[3px] shrink-0"
-                    style={{
+                  src={arrowRight}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-[6px] w-[3px] shrink-0"
+                  style={{
                     marginLeft: "8.2px",
                     marginRight: "7.2px",
-                    }}
+                  }}
                 />
               )}
             </li>
