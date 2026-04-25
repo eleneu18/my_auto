@@ -5,13 +5,12 @@ import gelIcon from "../../../assets/images/gel-icon.svg";
 import motoIcon from "../../../assets/images/moto-icon.svg";
 import tractorIcon from "../../../assets/images/tractor-icon.svg";
 import usdIcon from "../../../assets/images/usd-icon.svg";
-
 import { useCategories } from "../hooks/useCategories";
 import { useManufacturers } from "../hooks/useManufacturers";
 import { useModels } from "../hooks/useModels";
+import type { AppliedListingFilters } from "../types";
 
 type VehicleType = "car" | "tractor" | "moto";
-type Currency = "gel" | "usd";
 
 const vehicleTypes: { value: VehicleType; icon: string; label: string }[] = [
   { value: "car", icon: carIcon, label: "ავტომობილი" },
@@ -20,33 +19,23 @@ const vehicleTypes: { value: VehicleType; icon: string; label: string }[] = [
 ];
 
 type FilterSidebarProps = {
-  forRent?: 0 | 1;
-  manufacturerId?: number;
-  modelId?: number;
-  categoryId?: number;
-  onForRentChange: (value: 0 | 1 | undefined) => void;
-  onManufacturerChange: (value: number | undefined) => void;
-  onModelChange: (value: number | undefined) => void;
-  onCategoryChange: (value: number | undefined) => void;
+  initialFilters: AppliedListingFilters;
+  onApply: (filters: AppliedListingFilters) => void;
 };
 
-const FilterSidebar = ({
-  forRent,
-  manufacturerId,
-  modelId,
-  categoryId,
-  onForRentChange,
-  onManufacturerChange,
-  onModelChange,
-  onCategoryChange,
-}: FilterSidebarProps) => {
-  const { data: manufacturers = [] } = useManufacturers();
-  const { data: models = [] } = useModels(manufacturerId);
-  const { data: categories = [] } = useCategories();
-
+const FilterSidebar = ({ initialFilters, onApply }: FilterSidebarProps) => {
   const [activeVehicleType, setActiveVehicleType] =
     useState<VehicleType>("car");
-  const [activeCurrency, setActiveCurrency] = useState<Currency>("gel");
+  const [draft, setDraft] = useState<AppliedListingFilters>(initialFilters);
+
+  const { data: manufacturers = [] } = useManufacturers();
+  const { data: models = [] } = useModels(draft.manufacturerId);
+  const { data: categories = [] } = useCategories();
+
+  const updateDraft = (patch: Partial<AppliedListingFilters>) => {
+    setDraft((current) => ({ ...current, ...patch }));
+  };
+
   return (
     <aside className="w-full overflow-hidden rounded-t-[14px] bg-white shadow-[0_4px_16px_rgba(39,42,55,0.08)] md:w-[250px]">
       <div className="grid h-[48px] grid-cols-3 border-b border-[#E9EBF0]">
@@ -81,9 +70,11 @@ const FilterSidebar = ({
       <div className="space-y-5 px-6 py-6">
         <FilterSelect
           label="გარიგების ტიპი"
-          value={forRent === undefined ? "" : String(forRent)}
+          value={draft.forRent === undefined ? "" : String(draft.forRent)}
           onChange={(value) =>
-            onForRentChange(value === "" ? undefined : (Number(value) as 0 | 1))
+            updateDraft({
+              forRent: value === "" ? undefined : (Number(value) as 0 | 1),
+            })
           }
         >
           <option value="">ყველა</option>
@@ -93,9 +84,12 @@ const FilterSidebar = ({
 
         <FilterSelect
           label="მწარმოებელი"
-          value={manufacturerId ? String(manufacturerId) : ""}
+          value={draft.manufacturerId ? String(draft.manufacturerId) : ""}
           onChange={(value) =>
-            onManufacturerChange(value ? Number(value) : undefined)
+            updateDraft({
+              manufacturerId: value ? Number(value) : undefined,
+              modelId: undefined,
+            })
           }
         >
           <option value="">ყველა მწარმოებელი</option>
@@ -108,8 +102,10 @@ const FilterSidebar = ({
 
         <FilterSelect
           label="მოდელი"
-          value={modelId ? String(modelId) : ""}
-          onChange={(value) => onModelChange(value ? Number(value) : undefined)}
+          value={draft.modelId ? String(draft.modelId) : ""}
+          onChange={(value) =>
+            updateDraft({ modelId: value ? Number(value) : undefined })
+          }
         >
           <option value="">ყველა მოდელი</option>
           {models.map((model) => (
@@ -121,9 +117,9 @@ const FilterSidebar = ({
 
         <FilterSelect
           label="კატეგორია"
-          value={categoryId ? String(categoryId) : ""}
+          value={draft.categoryId ? String(draft.categoryId) : ""}
           onChange={(value) =>
-            onCategoryChange(value ? Number(value) : undefined)
+            updateDraft({ categoryId: value ? Number(value) : undefined })
           }
         >
           <option value="">ყველა კატეგორია</option>
@@ -145,10 +141,10 @@ const FilterSidebar = ({
             <button
               type="button"
               aria-label="Price in GEL"
-              onClick={() => setActiveCurrency("gel")}
+              onClick={() => updateDraft({ currency: "gel" })}
               className={[
                 "flex h-7 w-7 items-center justify-center rounded-full transition",
-                activeCurrency === "gel" ? "bg-[#272A37]" : "bg-white",
+                draft.currency === "gel" ? "bg-[#272A37]" : "bg-white",
               ].join(" ")}
             >
               <img
@@ -162,10 +158,10 @@ const FilterSidebar = ({
             <button
               type="button"
               aria-label="Price in USD"
-              onClick={() => setActiveCurrency("usd")}
+              onClick={() => updateDraft({ currency: "usd" })}
               className={[
                 "flex h-7 w-7 items-center justify-center rounded-full transition",
-                activeCurrency === "usd" ? "bg-[#272A37]" : "bg-white",
+                draft.currency === "usd" ? "bg-[#272A37]" : "bg-white",
               ].join(" ")}
             >
               <img
@@ -182,6 +178,14 @@ const FilterSidebar = ({
           <input
             type="number"
             placeholder="დან"
+            value={draft.priceFrom ?? ""}
+            onChange={(event) =>
+              updateDraft({
+                priceFrom: event.target.value
+                  ? Number(event.target.value)
+                  : undefined,
+              })
+            }
             className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none placeholder:text-[#8C929B] focus:border-[#6F7383]"
           />
 
@@ -190,6 +194,14 @@ const FilterSidebar = ({
           <input
             type="number"
             placeholder="მდე"
+            value={draft.priceTo ?? ""}
+            onChange={(event) =>
+              updateDraft({
+                priceTo: event.target.value
+                  ? Number(event.target.value)
+                  : undefined,
+              })
+            }
             className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none placeholder:text-[#8C929B] focus:border-[#6F7383]"
           />
         </div>
@@ -198,9 +210,10 @@ const FilterSidebar = ({
       <div className="bg-white px-6 py-6 shadow-[0_-8px_18px_rgba(39,42,55,0.05)]">
         <button
           type="button"
+          onClick={() => onApply(draft)}
           className="h-[48px] w-full rounded-[8px] bg-[#FD4100] text-[15px] font-bold text-white transition hover:bg-[#e83b00]"
         >
-          ძებნა 197,963
+          ძებნა
         </button>
       </div>
     </aside>

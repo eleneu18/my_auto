@@ -7,7 +7,13 @@ import ListingToolbar from "../features/listings/components/ListingToolbar";
 import { useProducts } from "../features/listings/hooks/useProducts";
 import { buildImageUrl } from "../features/listings/utils/buildImageUrl";
 import { useState } from "react";
-import type { Period, SortOrder } from "../features/listings/types";
+import type {
+  AppliedListingFilters,
+  Currency,
+  Period,
+  SortOrder,
+} from "../features/listings/types";
+import Pagination from "../features/listings/components/Pagination";
 
 const breadcrumbItems = [
   { label: "მთავარი", href: "/" },
@@ -18,24 +24,28 @@ const breadcrumbItems = [
 const ListingPage = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>(1);
   const [period, setPeriod] = useState<Period | undefined>("3h");
-  const [forRent, setForRent] = useState<0 | 1 | undefined>(undefined);
-  const [manufacturerId, setManufacturerId] = useState<number | undefined>();
-  const [modelId, setModelId] = useState<number | undefined>();
-  const [categoryId, setCategoryId] = useState<number | undefined>();
-  const mans = manufacturerId
-    ? modelId
-      ? `${manufacturerId}.${modelId}`
-      : String(manufacturerId)
+  const [page, setPage] = useState(1);
+  const [currency, setCurrency] = useState<Currency>("gel");
+  const [filters, setFilters] = useState<AppliedListingFilters>({
+    currency: "gel",
+  });
+
+  const mans = filters.manufacturerId
+    ? filters.modelId
+      ? `${filters.manufacturerId}.${filters.modelId}`
+      : String(filters.manufacturerId)
     : undefined;
 
-  const cats = categoryId ? String(categoryId) : undefined;
-  const { products, total, isLoading, error } = useProducts({
+  const cats = filters.categoryId ? String(filters.categoryId) : undefined;
+  const { products, total, meta, isLoading, error } = useProducts({
     sortOrder,
     period,
-    forRent,
+    forRent: filters.forRent,
     mans,
     cats,
-    page: 1,
+    priceFrom: filters.priceFrom,
+    priceTo: filters.priceTo,
+    page,
   });
   return (
     <div className="min-h-screen bg-[#f2f3f6]">
@@ -46,17 +56,12 @@ const ListingPage = () => {
 
         <div className="flex gap-5 w-full">
           <FilterSidebar
-            forRent={forRent}
-            manufacturerId={manufacturerId}
-            modelId={modelId}
-            categoryId={categoryId}
-            onForRentChange={setForRent}
-            onManufacturerChange={(id) => {
-              setManufacturerId(id);
-              setModelId(undefined);
+            initialFilters={filters}
+            onApply={(nextFilters) => {
+              setFilters(nextFilters);
+              setCurrency(nextFilters.currency);
+              setPage(1);
             }}
-            onModelChange={setModelId}
-            onCategoryChange={setCategoryId}
           />
           <div className="space-y-3 w-full">
             <ListingToolbar
@@ -78,7 +83,12 @@ const ListingPage = () => {
                     imageUrl={buildImageUrl(product)}
                     title={product.car_model || `მანქანა #${product.car_id}`}
                     year={product.prod_year}
-                    price={product.price_value || product.price}
+                    price={
+                      currency === "gel"
+                        ? product.price_value
+                        : product.price_usd
+                    }
+                    currency={currency}
                     mileageKm={product.car_run_km}
                     engine={`${product.engine_volume / 1000} ძრავი`}
                     transmission={`კოლოფი #${product.gear_type_id}`}
@@ -88,6 +98,13 @@ const ListingPage = () => {
                   />
                 ))}
               </div>
+            )}
+            {meta && (
+              <Pagination
+                currentPage={meta.current_page}
+                lastPage={meta.last_page}
+                onPageChange={setPage}
+              />
             )}
           </div>
         </div>

@@ -14,6 +14,7 @@ type CarCardProps = {
   location: string;
   customsPassed?: boolean;
   isVip?: boolean;
+  currency: "gel" | "usd";
 };
 
 const formatPrice = (price: number) =>
@@ -33,6 +34,7 @@ const CarCard = ({
   location,
   customsPassed = false,
   isVip = false,
+  currency,
 }: CarCardProps) => {
   return (
     <article className="overflow-hidden rounded-[14px] border border-transparent bg-white transition hover:border-[#BFDAD6] hover:shadow-sm md:flex md:min-h-[164px]">
@@ -67,7 +69,7 @@ const CarCard = ({
             </h3>
 
             <p className="mt-2 text-[20px] font-bold leading-none text-[#272A37] md:hidden">
-              {formatPrice(price)} ₾
+              {formatPrice(price)} {currency === "gel" ? "₾" : "$"}
             </p>
           </div>
 
@@ -83,7 +85,7 @@ const CarCard = ({
             )}
 
             <p className="text-[20px] font-medium leading-none text-[#272A37]">
-              {formatPrice(price)} ₾
+              {formatPrice(price)} {currency === "gel" ? "₾" : "$"}
             </p>
           </div>
         </div>
