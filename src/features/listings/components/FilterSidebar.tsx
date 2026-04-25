@@ -124,6 +124,7 @@ const FilterSidebar = ({
           placeholder="ყველა მოდელი"
           selectedIds={draft.modelIds}
           options={modelOptions}
+          disabled={draft.manufacturerIds.length === 0}
           onChange={(modelIds) => updateDraft({ modelIds })}
         />
 

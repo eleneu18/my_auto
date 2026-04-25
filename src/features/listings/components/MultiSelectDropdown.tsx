@@ -11,6 +11,7 @@ type MultiSelectDropdownProps = {
   selectedIds: number[];
   options: MultiSelectOption[];
   onChange: (ids: number[]) => void;
+  disabled?: boolean;
 };
 
 const MultiSelectDropdown = ({
@@ -19,13 +20,14 @@ const MultiSelectDropdown = ({
   selectedIds,
   options,
   onChange,
+  disabled = false,
 }: MultiSelectDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const selectedLabels = options
-    .filter((option) => selectedIds.includes(option.id))
-    .map((option) => option.label);
+  const selectedOptions = options.filter((option) =>
+    selectedIds.includes(option.id),
+  );
 
   const toggle = (id: number) => {
     onChange(
@@ -33,6 +35,12 @@ const MultiSelectDropdown = ({
         ? selectedIds.filter((selectedId) => selectedId !== id)
         : [...selectedIds, id],
     );
+  };
+
+  const clearSelected = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onChange([]);
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -51,6 +59,12 @@ const MultiSelectDropdown = ({
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (disabled) {
+      setIsOpen(false);
+    }
+  }, [disabled]);
+
   return (
     <div className="relative" ref={dropdownRef}>
       <span className="mb-2 block text-[13px] font-bold text-[#272A37]">
@@ -59,21 +73,45 @@ const MultiSelectDropdown = ({
 
       <button
         type="button"
+        disabled={disabled}
         onClick={() => setIsOpen((current) => !current)}
-        className="flex h-[44px] w-full items-center justify-between rounded-[10px] border border-[#D8DBE2] bg-white px-4 text-left text-[13px] text-[#272A37]"
+        className={[
+          "flex min-h-[44px] w-full items-center justify-between rounded-[10px] border px-3 py-2 text-left text-[13px] transition",
+          disabled
+            ? "cursor-not-allowed border-[#E1E3E8] bg-[#F4F5F7] text-[#A0A4AD]"
+            : "border-[#D8DBE2] bg-white text-[#272A37]",
+        ].join(" ")}
       >
-        <span className="truncate">
-          {selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder}
+        <span className="min-w-0 flex-1 truncate">
+          {selectedOptions.length > 0
+            ? selectedOptions.map((option) => option.label).join(", ")
+            : placeholder}
         </span>
-        <span className="text-[#6F7383]">{isOpen ? "×" : "⌄"}</span>
+
+        {selectedOptions.length > 0 && !disabled ? (
+          <span
+            role="button"
+            tabIndex={-1}
+            aria-label="Clear selected values"
+            onClick={clearSelected}
+            className="ml-2 shrink-0 text-[#6F7383]"
+          >
+            ×
+          </span>
+        ) : (
+          <span className="ml-2 shrink-0 text-[#6F7383]">
+            {isOpen ? "×" : "⌄"}
+          </span>
+        )}
       </button>
 
-      {isOpen && (
+      {isOpen && !disabled && (
         <div className="absolute left-0 top-[72px] z-30 w-full rounded-[10px] bg-white p-4 shadow-[0_8px_24px_rgba(39,42,55,0.16)]">
           <div className="max-h-[240px] overflow-y-auto pr-1">
             <div className="space-y-3">
               {options.map((option) => {
                 const isSelected = selectedIds.includes(option.id);
+
                 return (
                   <button
                     key={option.id}
@@ -97,6 +135,7 @@ const MultiSelectDropdown = ({
               })}
             </div>
           </div>
+
           <button
             type="button"
             onClick={() => setIsOpen(false)}
