@@ -18,9 +18,23 @@ const breadcrumbItems = [
 const ListingPage = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>(1);
   const [period, setPeriod] = useState<Period | undefined>("3h");
+  const [forRent, setForRent] = useState<0 | 1 | undefined>(undefined);
+  const [manufacturerId, setManufacturerId] = useState<number | undefined>();
+  const [modelId, setModelId] = useState<number | undefined>();
+  const [categoryId, setCategoryId] = useState<number | undefined>();
+  const mans = manufacturerId
+    ? modelId
+      ? `${manufacturerId}.${modelId}`
+      : String(manufacturerId)
+    : undefined;
+
+  const cats = categoryId ? String(categoryId) : undefined;
   const { products, total, isLoading, error } = useProducts({
     sortOrder,
     period,
+    forRent,
+    mans,
+    cats,
     page: 1,
   });
   return (
@@ -31,7 +45,19 @@ const ListingPage = () => {
         <Breadcrumb items={breadcrumbItems} />
 
         <div className="flex gap-5 w-full">
-          <FilterSidebar />
+          <FilterSidebar
+            forRent={forRent}
+            manufacturerId={manufacturerId}
+            modelId={modelId}
+            categoryId={categoryId}
+            onForRentChange={setForRent}
+            onManufacturerChange={(id) => {
+              setManufacturerId(id);
+              setModelId(undefined);
+            }}
+            onModelChange={setModelId}
+            onCategoryChange={setCategoryId}
+          />
           <div className="space-y-3 w-full">
             <ListingToolbar
               totalCount={total}
@@ -39,7 +65,7 @@ const ListingPage = () => {
               period={period}
               onSortChange={setSortOrder}
               onPeriodChange={setPeriod}
-            />{" "}
+            />
             {isLoading && (
               <p className="text-[13px] text-[#6F7383]">იტვირთება...</p>
             )}

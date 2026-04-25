@@ -7,9 +7,15 @@ type ToolbarOption<T extends string | number> = {
 };
 
 const periodOptions: ToolbarOption<Period>[] = [
+  { label: "ბოლო 1 საათი", value: "1h" },
+  { label: "ბოლო 2 საათი", value: "2h" },
   { label: "ბოლო 3 საათი", value: "3h" },
   { label: "ბოლო 1 დღე", value: "1d" },
+  { label: "ბოლო 2 დღე", value: "2d" },
+  { label: "ბოლო 3 დღე", value: "3d" },
   { label: "ბოლო 1 კვირა", value: "1w" },
+  { label: "ბოლო 2 კვირა", value: "2w" },
+  { label: "ბოლო 3 კვირა", value: "3w" },
 ];
 
 const sortOptions: ToolbarOption<SortOrder>[] = [

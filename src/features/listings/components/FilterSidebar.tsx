@@ -6,6 +6,10 @@ import motoIcon from "../../../assets/images/moto-icon.svg";
 import tractorIcon from "../../../assets/images/tractor-icon.svg";
 import usdIcon from "../../../assets/images/usd-icon.svg";
 
+import { useCategories } from "../hooks/useCategories";
+import { useManufacturers } from "../hooks/useManufacturers";
+import { useModels } from "../hooks/useModels";
+
 type VehicleType = "car" | "tractor" | "moto";
 type Currency = "gel" | "usd";
 
@@ -15,7 +19,31 @@ const vehicleTypes: { value: VehicleType; icon: string; label: string }[] = [
   { value: "moto", icon: motoIcon, label: "მოტო" },
 ];
 
-const FilterSidebar = () => {
+type FilterSidebarProps = {
+  forRent?: 0 | 1;
+  manufacturerId?: number;
+  modelId?: number;
+  categoryId?: number;
+  onForRentChange: (value: 0 | 1 | undefined) => void;
+  onManufacturerChange: (value: number | undefined) => void;
+  onModelChange: (value: number | undefined) => void;
+  onCategoryChange: (value: number | undefined) => void;
+};
+
+const FilterSidebar = ({
+  forRent,
+  manufacturerId,
+  modelId,
+  categoryId,
+  onForRentChange,
+  onManufacturerChange,
+  onModelChange,
+  onCategoryChange,
+}: FilterSidebarProps) => {
+  const { data: manufacturers = [] } = useManufacturers();
+  const { data: models = [] } = useModels(manufacturerId);
+  const { data: categories = [] } = useCategories();
+
   const [activeVehicleType, setActiveVehicleType] =
     useState<VehicleType>("car");
   const [activeCurrency, setActiveCurrency] = useState<Currency>("gel");
@@ -51,23 +79,59 @@ const FilterSidebar = () => {
       </div>
 
       <div className="space-y-5 px-6 py-6">
-        <FilterSelect label="გარიგების ტიპი" defaultValue="იყიდება">
-          <option>იყიდება</option>
-          <option>ქირავდება</option>
+        <FilterSelect
+          label="გარიგების ტიპი"
+          value={forRent === undefined ? "" : String(forRent)}
+          onChange={(value) =>
+            onForRentChange(value === "" ? undefined : (Number(value) as 0 | 1))
+          }
+        >
+          <option value="">ყველა</option>
+          <option value="0">იყიდება</option>
+          <option value="1">ქირავდება</option>
         </FilterSelect>
 
-        <FilterSelect label="მწარმოებელი" defaultValue="">
+        <FilterSelect
+          label="მწარმოებელი"
+          value={manufacturerId ? String(manufacturerId) : ""}
+          onChange={(value) =>
+            onManufacturerChange(value ? Number(value) : undefined)
+          }
+        >
           <option value="">ყველა მწარმოებელი</option>
-          <option>Land Rover</option>
-          <option>Hyundai</option>
-          <option>Toyota</option>
+          {manufacturers.map((manufacturer) => (
+            <option key={manufacturer.man_id} value={manufacturer.man_id}>
+              {manufacturer.man_name}
+            </option>
+          ))}
         </FilterSelect>
 
-        <FilterSelect label="კატეგორია" defaultValue="">
+        <FilterSelect
+          label="მოდელი"
+          value={modelId ? String(modelId) : ""}
+          onChange={(value) => onModelChange(value ? Number(value) : undefined)}
+        >
+          <option value="">ყველა მოდელი</option>
+          {models.map((model) => (
+            <option key={model.model_id} value={model.model_id}>
+              {model.model_name}
+            </option>
+          ))}
+        </FilterSelect>
+
+        <FilterSelect
+          label="კატეგორია"
+          value={categoryId ? String(categoryId) : ""}
+          onChange={(value) =>
+            onCategoryChange(value ? Number(value) : undefined)
+          }
+        >
           <option value="">ყველა კატეგორია</option>
-          <option>სედანი</option>
-          <option>ჯიპი</option>
-          <option>ჰეჩბექი</option>
+          {categories.map((category) => (
+            <option key={category.category_id} value={category.category_id}>
+              {category.title}
+            </option>
+          ))}
         </FilterSelect>
       </div>
 
@@ -145,11 +209,17 @@ const FilterSidebar = () => {
 
 type FilterSelectProps = {
   label: string;
-  defaultValue?: string;
+  value: string;
+  onChange: (value: string) => void;
   children: React.ReactNode;
 };
 
-const FilterSelect = ({ label, defaultValue, children }: FilterSelectProps) => {
+const FilterSelect = ({
+  label,
+  value,
+  onChange,
+  children,
+}: FilterSelectProps) => {
   return (
     <label className="block">
       <span className="mb-2 block text-[13px] font-bold leading-none text-[#272A37]">
@@ -157,7 +227,8 @@ const FilterSelect = ({ label, defaultValue, children }: FilterSelectProps) => {
       </span>
 
       <select
-        defaultValue={defaultValue}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
         className="h-[44px] w-full appearance-none rounded-[10px] border border-[#D8DBE2] bg-white px-4 text-[13px] font-medium text-[#272A37] outline-none transition focus:border-[#6F7383]"
       >
         {children}
