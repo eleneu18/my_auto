@@ -12,6 +12,8 @@ export type Product = {
     price: number;
     price_usd: number;
     price_value: number;
+    has_predicted_price?: boolean | number | null;
+    pred_first_breakpoint?: number | null;
     fuel_type_id: number;
     gear_type_id: number;
     drive_type_id: number;

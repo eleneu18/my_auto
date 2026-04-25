@@ -248,26 +248,36 @@ const ListingPage = () => {
 
             {!isLoading && !error && (
               <div className="space-y-3">
-                {products.map((product) => (
-                  <CarCard
-                    key={product.car_id}
-                    imageUrl={buildImageUrl(product)}
-                    title={product.car_model || `მანქანა #${product.car_id}`}
-                    year={product.prod_year}
-                    price={
-                      currency === "gel"
-                        ? product.price_value
-                        : product.price_usd
-                    }
-                    currency={currency}
-                    mileageKm={product.car_run_km}
-                    engine={`${product.engine_volume / 1000} ძრავი`}
-                    transmission={`კოლოფი #${product.gear_type_id}`}
-                    location="თბილისი"
-                    customsPassed={product.customs_passed}
-                    isVip={false}
-                  />
-                ))}
+                {products.map((product) => {
+                  const cardPrice =
+                    currency === "gel"
+                      ? product.price_value
+                      : product.price_usd;
+
+                  const isGoodPrice =
+                    Boolean(product.has_predicted_price) &&
+                    product.pred_first_breakpoint !== undefined &&
+                    product.pred_first_breakpoint !== null &&
+                    cardPrice <= product.pred_first_breakpoint;
+
+                  return (
+                    <CarCard
+                      key={product.car_id}
+                      imageUrl={buildImageUrl(product)}
+                      title={product.car_model || `მანქანა #${product.car_id}`}
+                      year={product.prod_year}
+                      price={cardPrice}
+                      currency={currency}
+                      mileageKm={product.car_run_km}
+                      engine={`${product.engine_volume / 1000} ძრავი`}
+                      transmission={`კოლოფი #${product.gear_type_id}`}
+                      location="თბილისი"
+                      customsPassed={product.customs_passed}
+                      isVip={false}
+                      isGoodPrice={isGoodPrice}
+                    />
+                  );
+                })}
               </div>
             )}
 

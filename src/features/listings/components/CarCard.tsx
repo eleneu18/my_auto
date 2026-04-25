@@ -15,6 +15,7 @@ type CarCardProps = {
   customsPassed?: boolean;
   isVip?: boolean;
   currency: "gel" | "usd";
+  isGoodPrice?: boolean;
 };
 
 const formatPrice = (price: number) =>
@@ -35,9 +36,17 @@ const CarCard = ({
   customsPassed = false,
   isVip = false,
   currency,
+  isGoodPrice = false,
 }: CarCardProps) => {
   return (
-    <article className="overflow-hidden rounded-[14px] border border-transparent bg-white transition hover:border-[#BFDAD6] hover:shadow-sm md:flex md:min-h-[164px]">
+    <article
+      className={[
+        "overflow-hidden rounded-[14px] border transition hover:shadow-sm md:flex md:min-h-[164px]",
+        isGoodPrice
+          ? "border-[#59D8C9] bg-[#F0F9F7]"
+          : "border-transparent bg-white hover:border-[#BFDAD6]",
+      ].join(" ")}
+    >
       <div className="relative md:w-[182px] md:shrink-0">
         <img
           src={imageUrl}
@@ -59,7 +68,6 @@ const CarCard = ({
           </span>
         )}
       </div>
-
       <div className="flex min-w-0 flex-1 flex-col px-4 py-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
