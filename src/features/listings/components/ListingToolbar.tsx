@@ -1,32 +1,46 @@
 import { useState } from "react";
+import type { Period, SortOrder } from "../types";
 
-type SortOption = {
+type ToolbarOption<T extends string | number> = {
   label: string;
-  value: string;
+  value: T;
 };
 
-const periodOptions: SortOption[] = [
+const periodOptions: ToolbarOption<Period>[] = [
   { label: "ბოლო 3 საათი", value: "3h" },
   { label: "ბოლო 1 დღე", value: "1d" },
   { label: "ბოლო 1 კვირა", value: "1w" },
 ];
 
-const sortOptions: SortOption[] = [
-  { label: "თარიღი კლებადი", value: "date_desc" },
-  { label: "თარიღი ზრდადი", value: "date_asc" },
-  { label: "ფასი კლებადი", value: "price_desc" },
-  { label: "ფასი ზრდადი", value: "price_asc" },
-  { label: "გარბენი კლებადი", value: "mileage_desc" },
-  { label: "გარბენი ზრდადი", value: "mileage_asc" },
+const sortOptions: ToolbarOption<SortOrder>[] = [
+  { label: "თარიღი კლებადი", value: 1 },
+  { label: "თარიღი ზრდადი", value: 2 },
+  { label: "ფასი კლებადი", value: 3 },
+  { label: "ფასი ზრდადი", value: 4 },
+  { label: "გარბენი კლებადი", value: 5 },
+  { label: "გარბენი ზრდადი", value: 6 },
 ];
 
 type ListingToolbarProps = {
   totalCount: number;
+  sortOrder: SortOrder;
+  period?: Period;
+  onSortChange: (sortOrder: SortOrder) => void;
+  onPeriodChange: (period: Period) => void;
 };
 
-const ListingToolbar = ({ totalCount }: ListingToolbarProps) => {
-  const [period, setPeriod] = useState(periodOptions[0]);
-  const [sort, setSort] = useState(sortOptions[0]);
+const ListingToolbar = ({
+  totalCount,
+  sortOrder,
+  period,
+  onSortChange,
+  onPeriodChange,
+}: ListingToolbarProps) => {
+  const selectedPeriod =
+    periodOptions.find((option) => option.value === period) ?? periodOptions[0];
+
+  const selectedSort =
+    sortOptions.find((option) => option.value === sortOrder) ?? sortOptions[0];
 
   return (
     <div className="mb-4 flex items-center justify-between gap-4">
@@ -36,15 +50,15 @@ const ListingToolbar = ({ totalCount }: ListingToolbarProps) => {
 
       <div className="flex items-center gap-3">
         <ToolbarSelect
-          value={period.label}
+          value={selectedPeriod.label}
           options={periodOptions}
-          onChange={setPeriod}
+          onChange={(option) => onPeriodChange(option.value)}
         />
 
         <ToolbarSelect
-          value={sort.label}
+          value={selectedSort.label}
           options={sortOptions}
-          onChange={setSort}
+          onChange={(option) => onSortChange(option.value)}
           align="right"
         />
       </div>
@@ -52,19 +66,19 @@ const ListingToolbar = ({ totalCount }: ListingToolbarProps) => {
   );
 };
 
-type ToolbarSelectProps = {
+type ToolbarSelectProps<T extends string | number> = {
   value: string;
-  options: SortOption[];
-  onChange: (option: SortOption) => void;
+  options: ToolbarOption<T>[];
+  onChange: (option: ToolbarOption<T>) => void;
   align?: "left" | "right";
 };
 
-const ToolbarSelect = ({
+const ToolbarSelect = <T extends string | number>({
   value,
   options,
   onChange,
   align = "left",
-}: ToolbarSelectProps) => {
+}: ToolbarSelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

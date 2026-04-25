@@ -6,6 +6,8 @@ import ListingToolbar from "../features/listings/components/ListingToolbar";
 
 import { useProducts } from "../features/listings/hooks/useProducts";
 import { buildImageUrl } from "../features/listings/utils/buildImageUrl";
+import { useState } from "react";
+import type { Period, SortOrder } from "../features/listings/types";
 
 const breadcrumbItems = [
   { label: "მთავარი", href: "/" },
@@ -14,8 +16,13 @@ const breadcrumbItems = [
 ];
 
 const ListingPage = () => {
-  const { products, total, isLoading, error } = useProducts();
-
+  const [sortOrder, setSortOrder] = useState<SortOrder>(1);
+  const [period, setPeriod] = useState<Period | undefined>("3h");
+  const { products, total, isLoading, error } = useProducts({
+    sortOrder,
+    period,
+    page: 1,
+  });
   return (
     <div className="min-h-screen bg-[#f2f3f6]">
       <Header />
@@ -26,12 +33,17 @@ const ListingPage = () => {
         <div className="flex gap-5 w-full">
           <FilterSidebar />
           <div className="space-y-3 w-full">
-            <ListingToolbar totalCount={total} />
+            <ListingToolbar
+              totalCount={total}
+              sortOrder={sortOrder}
+              period={period}
+              onSortChange={setSortOrder}
+              onPeriodChange={setPeriod}
+            />{" "}
             {isLoading && (
               <p className="text-[13px] text-[#6F7383]">იტვირთება...</p>
             )}
             {error && <p className="text-[13px] text-[#FD4100]">{error}</p>}
-
             {!isLoading && !error && (
               <div className="space-y-3">
                 {products.map((product) => (

@@ -1,21 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getProducts } from "../../../api/products";
+import type { ProductFilters } from "../types";
 
-export const useProducts = () => {
+export const useProducts = (filters: ProductFilters = {}) => {
   const query = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
+    queryKey: ["products", filters],
+    queryFn: () => getProducts(filters),
     staleTime: 60_000,
   });
 
   return {
     products: query.data?.items ?? [],
-    total: query.data?.meta.total ?? query.data?.items.length ?? 0,
+    total: query.data?.meta.total ?? 0,
+    meta: query.data?.meta,
     isLoading: query.isLoading,
     error: query.error ? "პროდუქტების ჩატვირთვა ვერ მოხერხდა" : null,
-    isError: query.isError,
     isFetching: query.isFetching,
-    refetch: query.refetch,
   };
 };
