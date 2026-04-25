@@ -67,7 +67,7 @@ const MultiSelectDropdown = ({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <span className="mb-2 block text-[13px] font-bold text-[#272A37]">
+      <span className="mb-2 block font-tbcx text-[12px] font-medium text-[#272A37]">
         {label}
       </span>
 

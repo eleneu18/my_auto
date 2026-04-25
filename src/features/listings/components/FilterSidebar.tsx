@@ -205,7 +205,7 @@ const FilterSelect = ({
 }: FilterSelectProps) => {
   return (
     <label className="block">
-      <span className="mb-2 block text-[13px] font-bold leading-none text-[#272A37]">
+      <span className="mb-2 block font-tbcx text-[12px] font-medium leading-none text-[#272A37]">
         {label}
       </span>
 
