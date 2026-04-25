@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import arrowRight from "../../../assets/images/arrow-icon.svg";
 
 type CategoryOption = {
   id: number;
@@ -63,7 +64,15 @@ const CategoryPillsSelect = ({
             ? selectedLabels.join(", ")
             : "ყველა კატეგორია"}
         </span>
-        <span className="text-[#6F7383]">{isOpen ? "×" : "⌄"}</span>
+        <img
+          src={arrowRight}
+          alt=""
+          aria-hidden="true"
+          className={[
+            "shrink-0 transition-transform",
+            isOpen ? "-rotate-90" : "rotate-90",
+          ].join(" ")}
+        />{" "}
       </button>
 
       {isOpen && (

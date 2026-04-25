@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { Period, SortOrder } from "../types";
 
+import arrowRight from "../../../assets/images/arrow-icon.svg";
+
 type ToolbarOption<T extends string | number> = {
   label: string;
   value: T;
@@ -112,7 +114,15 @@ const ToolbarSelect = <T extends string | number>({
         className="flex h-[40px] min-w-[156px] items-center justify-between gap-4 rounded-[10px] border border-[#D8DBE2] bg-white px-4 font-tbcx text-[13px] font-medium text-[#454857]"
       >
         <span>{value}</span>
-        <span className="text-[#6F7383]">{isOpen ? "⌃" : "⌄"}</span>
+        <img
+          src={arrowRight}
+          alt=""
+          aria-hidden="true"
+          className={[
+            "transition-transform",
+            isOpen ? "-rotate-90" : "rotate-90",
+          ].join(" ")}
+        />{" "}
       </button>
 
       {isOpen && (

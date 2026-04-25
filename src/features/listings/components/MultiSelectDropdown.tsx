@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import arrowRight from "../../../assets/images/arrow-icon.svg";
 
 type MultiSelectOption = {
   id: number;
@@ -100,7 +101,15 @@ const MultiSelectDropdown = ({
           </span>
         ) : (
           <span className="ml-2 shrink-0 text-[#6F7383]">
-            {isOpen ? "×" : "⌄"}
+            <img
+              src={arrowRight}
+              alt=""
+              aria-hidden="true"
+              className={[
+                "ml-2 shrink-0 transition-transform",
+                isOpen ? "-rotate-90" : "rotate-90",
+              ].join(" ")}
+            />
           </span>
         )}
       </button>

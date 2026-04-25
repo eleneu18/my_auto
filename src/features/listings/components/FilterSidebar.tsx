@@ -5,6 +5,7 @@ import gelIcon from "../../../assets/images/gel-icon.svg";
 import motoIcon from "../../../assets/images/moto-icon.svg";
 import tractorIcon from "../../../assets/images/tractor-icon.svg";
 import usdIcon from "../../../assets/images/usd-icon.svg";
+import arrowRight from "../../../assets/images/arrow-icon.svg";
 import CategoryPillsSelect from "./CategoryPillsSelect";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import { useCategories } from "../hooks/useCategories";
@@ -250,7 +251,15 @@ const FilterSelect = ({
         className="flex h-[44px] w-full items-center justify-between rounded-[10px] border border-[#D8DBE2] bg-white px-4 font-tbcx text-[13px] font-medium text-[#272A37]"
       >
         <span>{selectedOption.label}</span>
-        <span className="text-[#6F7383]">{isOpen ? "⌃" : "⌄"}</span>
+        <img
+          src={arrowRight}
+          alt=""
+          aria-hidden="true"
+          className={[
+            "transition-transform",
+            isOpen ? "-rotate-90" : "rotate-90",
+          ].join(" ")}
+        />{" "}
       </button>
       {isOpen && (
         <div className="absolute left-0 top-16 z-30 w-full overflow-hidden rounded-[10px] border border-[#D4D4E0] bg-white py-2 shadow-[0_10px_30px_0_rgba(44,46,85,0.13)]">
