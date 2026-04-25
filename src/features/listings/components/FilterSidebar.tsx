@@ -144,19 +144,34 @@ const FilterSidebar = ({
             ფასი
           </h3>
 
-          <div className="flex rounded-full border border-[#D8DBE2] bg-white p-[2px]">
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Toggle currency"
+            onClick={() =>
+              updateDraft({
+                currency: draft.currency === "gel" ? "usd" : "gel",
+              })
+            }
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                updateDraft({
+                  currency: draft.currency === "gel" ? "usd" : "gel",
+                });
+              }
+            }}
+            className="flex cursor-pointer rounded-full border border-[#D8DBE2] bg-white p-[2px]"
+          >
             <CurrencyButton
               label="Price in GEL"
               icon={gelIcon}
               isActive={draft.currency === "gel"}
-              onClick={() => updateDraft({ currency: "gel" })}
             />
-
             <CurrencyButton
               label="Price in USD"
               icon={usdIcon}
               isActive={draft.currency === "usd"}
-              onClick={() => updateDraft({ currency: "usd" })}
             />
           </div>
         </div>
@@ -262,27 +277,20 @@ type CurrencyButtonProps = {
   label: string;
   icon: string;
   isActive: boolean;
-  onClick: () => void;
 };
 
-const CurrencyButton = ({
-  label,
-  icon,
-  isActive,
-  onClick,
-}: CurrencyButtonProps) => {
+const CurrencyButton = ({ label, icon, isActive }: CurrencyButtonProps) => {
   return (
-    <button
-      type="button"
+    <span
+      role="img"
       aria-label={label}
-      onClick={onClick}
       className={[
         "flex h-7 w-7 items-center justify-center rounded-full transition",
         isActive ? "bg-[#272A37]" : "bg-white",
       ].join(" ")}
     >
       <img src={icon} alt="" aria-hidden="true" className="h-4 w-4" />
-    </button>
+    </span>
   );
 };
 
