@@ -96,12 +96,12 @@ export type Product = {
 
   export type Currency = "gel" | "usd";
 
-export type AppliedListingFilters = {
-  forRent?: 0 | 1;
-  manufacturerId?: number;
-  modelId?: number;
-  categoryId?: number;
-  priceFrom?: number;
-  priceTo?: number;
-  currency: Currency;
-};
+  export type AppliedListingFilters = {
+    forRent?: 0 | 1;
+    manufacturerIds: number[];
+    modelIds: number[];
+    categoryIds: number[];
+    priceFrom?: number;
+    priceTo?: number;
+    currency: Currency;
+  };

@@ -5,6 +5,8 @@ import gelIcon from "../../../assets/images/gel-icon.svg";
 import motoIcon from "../../../assets/images/moto-icon.svg";
 import tractorIcon from "../../../assets/images/tractor-icon.svg";
 import usdIcon from "../../../assets/images/usd-icon.svg";
+import CategoryPillsSelect from "./CategoryPillsSelect";
+import MultiSelectDropdown from "./MultiSelectDropdown";
 import { useCategories } from "../hooks/useCategories";
 import { useManufacturers } from "../hooks/useManufacturers";
 import { useModels } from "../hooks/useModels";
@@ -12,17 +14,17 @@ import type { AppliedListingFilters } from "../types";
 
 type VehicleType = "car" | "tractor" | "moto";
 
-const vehicleTypes: { value: VehicleType; icon: string; label: string }[] = [
-  { value: "car", icon: carIcon, label: "ავტომობილი" },
-  { value: "tractor", icon: tractorIcon, label: "ტრაქტორი" },
-  { value: "moto", icon: motoIcon, label: "მოტო" },
-];
-
 type FilterSidebarProps = {
   initialFilters: AppliedListingFilters;
   totalCount: number;
   onApply: (filters: AppliedListingFilters) => void;
 };
+
+const vehicleTypes: { value: VehicleType; icon: string; label: string }[] = [
+  { value: "car", icon: carIcon, label: "ავტომობილი" },
+  { value: "tractor", icon: tractorIcon, label: "ტრაქტორი" },
+  { value: "moto", icon: motoIcon, label: "მოტო" },
+];
 
 const FilterSidebar = ({
   initialFilters,
@@ -33,13 +35,30 @@ const FilterSidebar = ({
     useState<VehicleType>("car");
   const [draft, setDraft] = useState<AppliedListingFilters>(initialFilters);
 
+  const selectedManufacturerId = draft.manufacturerIds[0];
+
   const { data: manufacturers = [] } = useManufacturers();
-  const { data: models = [] } = useModels(draft.manufacturerId);
+  const { data: models = [] } = useModels(selectedManufacturerId);
   const { data: categories = [] } = useCategories();
 
   const updateDraft = (patch: Partial<AppliedListingFilters>) => {
     setDraft((current) => ({ ...current, ...patch }));
   };
+
+  const manufacturerOptions = manufacturers.map((manufacturer) => ({
+    id: Number(manufacturer.man_id),
+    label: manufacturer.man_name,
+  }));
+
+  const modelOptions = models.map((model) => ({
+    id: model.model_id,
+    label: model.model_name,
+  }));
+
+  const categoryOptions = categories.map((category) => ({
+    id: category.category_id,
+    label: category.title,
+  }));
 
   return (
     <aside className="w-full overflow-hidden rounded-t-[14px] bg-white shadow-[0_4px_16px_rgba(39,42,55,0.08)] md:w-[250px]">
@@ -87,53 +106,32 @@ const FilterSidebar = ({
           <option value="1">ქირავდება</option>
         </FilterSelect>
 
-        <FilterSelect
+        <MultiSelectDropdown
           label="მწარმოებელი"
-          value={draft.manufacturerId ? String(draft.manufacturerId) : ""}
-          onChange={(value) =>
+          placeholder="ყველა მწარმოებელი"
+          selectedIds={draft.manufacturerIds}
+          options={manufacturerOptions}
+          onChange={(manufacturerIds) =>
             updateDraft({
-              manufacturerId: value ? Number(value) : undefined,
-              modelId: undefined,
+              manufacturerIds,
+              modelIds: [],
             })
           }
-        >
-          <option value="">ყველა მწარმოებელი</option>
-          {manufacturers.map((manufacturer) => (
-            <option key={manufacturer.man_id} value={manufacturer.man_id}>
-              {manufacturer.man_name}
-            </option>
-          ))}
-        </FilterSelect>
+        />
 
-        <FilterSelect
+        <MultiSelectDropdown
           label="მოდელი"
-          value={draft.modelId ? String(draft.modelId) : ""}
-          onChange={(value) =>
-            updateDraft({ modelId: value ? Number(value) : undefined })
-          }
-        >
-          <option value="">ყველა მოდელი</option>
-          {models.map((model) => (
-            <option key={model.model_id} value={model.model_id}>
-              {model.model_name}
-            </option>
-          ))}
-        </FilterSelect>
+          placeholder="ყველა მოდელი"
+          selectedIds={draft.modelIds}
+          options={modelOptions}
+          onChange={(modelIds) => updateDraft({ modelIds })}
+        />
 
-        <FilterSelect
-          label="კატეგორია"
-          value={draft.categoryId ? String(draft.categoryId) : ""}
-          onChange={(value) =>
-            updateDraft({ categoryId: value ? Number(value) : undefined })
-          }
-        >
-          <option value="">ყველა კატეგორია</option>
-          {categories.map((category) => (
-            <option key={category.category_id} value={category.category_id}>
-              {category.title}
-            </option>
-          ))}
-        </FilterSelect>
+        <CategoryPillsSelect
+          selectedIds={draft.categoryIds}
+          options={categoryOptions}
+          onChange={(categoryIds) => updateDraft({ categoryIds })}
+        />
       </div>
 
       <div className="border-t border-[#E9EBF0] px-6 py-6">
@@ -143,71 +141,35 @@ const FilterSidebar = ({
           </h3>
 
           <div className="flex rounded-full border border-[#D8DBE2] bg-white p-[2px]">
-            <button
-              type="button"
-              aria-label="Price in GEL"
+            <CurrencyButton
+              label="Price in GEL"
+              icon={gelIcon}
+              isActive={draft.currency === "gel"}
               onClick={() => updateDraft({ currency: "gel" })}
-              className={[
-                "flex h-7 w-7 items-center justify-center rounded-full transition",
-                draft.currency === "gel" ? "bg-[#272A37]" : "bg-white",
-              ].join(" ")}
-            >
-              <img
-                src={gelIcon}
-                alt=""
-                aria-hidden="true"
-                className="h-4 w-4"
-              />
-            </button>
+            />
 
-            <button
-              type="button"
-              aria-label="Price in USD"
+            <CurrencyButton
+              label="Price in USD"
+              icon={usdIcon}
+              isActive={draft.currency === "usd"}
               onClick={() => updateDraft({ currency: "usd" })}
-              className={[
-                "flex h-7 w-7 items-center justify-center rounded-full transition",
-                draft.currency === "usd" ? "bg-[#272A37]" : "bg-white",
-              ].join(" ")}
-            >
-              <img
-                src={usdIcon}
-                alt=""
-                aria-hidden="true"
-                className="h-4 w-4"
-              />
-            </button>
+            />
           </div>
         </div>
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-          <input
-            type="number"
+          <PriceInput
             placeholder="დან"
-            value={draft.priceFrom ?? ""}
-            onChange={(event) =>
-              updateDraft({
-                priceFrom: event.target.value
-                  ? Number(event.target.value)
-                  : undefined,
-              })
-            }
-            className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none placeholder:text-[#8C929B] focus:border-[#6F7383]"
+            value={draft.priceFrom}
+            onChange={(priceFrom) => updateDraft({ priceFrom })}
           />
 
           <span className="h-px w-3 bg-[#D8DBE2]" />
 
-          <input
-            type="number"
+          <PriceInput
             placeholder="მდე"
-            value={draft.priceTo ?? ""}
-            onChange={(event) =>
-              updateDraft({
-                priceTo: event.target.value
-                  ? Number(event.target.value)
-                  : undefined,
-              })
-            }
-            className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none placeholder:text-[#8C929B] focus:border-[#6F7383]"
+            value={draft.priceTo}
+            onChange={(priceTo) => updateDraft({ priceTo })}
           />
         </div>
       </div>
@@ -252,6 +214,54 @@ const FilterSelect = ({
         {children}
       </select>
     </label>
+  );
+};
+
+type CurrencyButtonProps = {
+  label: string;
+  icon: string;
+  isActive: boolean;
+  onClick: () => void;
+};
+
+const CurrencyButton = ({
+  label,
+  icon,
+  isActive,
+  onClick,
+}: CurrencyButtonProps) => {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={[
+        "flex h-7 w-7 items-center justify-center rounded-full transition",
+        isActive ? "bg-[#272A37]" : "bg-white",
+      ].join(" ")}
+    >
+      <img src={icon} alt="" aria-hidden="true" className="h-4 w-4" />
+    </button>
+  );
+};
+
+type PriceInputProps = {
+  placeholder: string;
+  value?: number;
+  onChange: (value: number | undefined) => void;
+};
+
+const PriceInput = ({ placeholder, value, onChange }: PriceInputProps) => {
+  return (
+    <input
+      type="number"
+      placeholder={placeholder}
+      value={value ?? ""}
+      onChange={(event) =>
+        onChange(event.target.value ? Number(event.target.value) : undefined)
+      }
+      className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none placeholder:text-[#8C929B] focus:border-[#6F7383]"
+    />
   );
 };
 

@@ -28,16 +28,27 @@ const ListingPage = () => {
   const [page, setPage] = useState(1);
   const [currency, setCurrency] = useState<Currency>("gel");
   const [filters, setFilters] = useState<AppliedListingFilters>({
+    manufacturerIds: [],
+    modelIds: [],
+    categoryIds: [],
     currency: "gel",
   });
+  const mans =
+    filters.manufacturerIds.length > 0
+      ? filters.manufacturerIds
+          .map((manId) => {
+            const modelsForManufacturer = filters.modelIds;
 
-  const mans = filters.manufacturerId
-    ? filters.modelId
-      ? `${filters.manufacturerId}.${filters.modelId}`
-      : String(filters.manufacturerId)
-    : undefined;
+            return modelsForManufacturer.length > 0
+              ? `${manId}.${modelsForManufacturer.join(".")}`
+              : String(manId);
+          })
+          .join("-")
+      : undefined;
 
-  const cats = filters.categoryId ? String(filters.categoryId) : undefined;
+  const cats =
+    filters.categoryIds.length > 0 ? filters.categoryIds.join(".") : undefined;
+
   const { products, total, meta, isLoading, error } = useProducts({
     sortOrder,
     period,
