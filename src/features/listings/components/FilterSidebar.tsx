@@ -61,7 +61,7 @@ const FilterSidebar = ({
   }));
 
   return (
-    <aside className="w-full overflow-hidden rounded-t-[14px] bg-white shadow-[0_4px_16px_rgba(39,42,55,0.08)] md:w-[250px]">
+    <aside className="w-full overflow-hidden rounded-t-[12px] border border-[#E2E5EB] bg-white shadow-[0_4px_16px_rgba(164,174,193,0.10)] md:w-[250px]">
       <div className="grid h-[48px] grid-cols-3 border-b border-[#E9EBF0]">
         {vehicleTypes.map((item) => {
           const isActive = item.value === activeVehicleType;
@@ -74,7 +74,9 @@ const FilterSidebar = ({
               onClick={() => setActiveVehicleType(item.value)}
               className={[
                 "flex items-center justify-center border-r border-[#E9EBF0] transition last:border-r-0",
-                isActive ? "border-b-2 border-b-[#FD4100]" : "",
+                isActive
+                  ? "border-b-2 border-b-[#FD4100] bg-white"
+                  : "bg-[#F9F9FB]",
               ].join(" ")}
             >
               <img
