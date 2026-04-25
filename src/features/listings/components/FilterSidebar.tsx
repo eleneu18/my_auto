@@ -238,7 +238,7 @@ const FilterSelect = ({
         <span className="text-[#6F7383]">{isOpen ? "⌃" : "⌄"}</span>
       </button>
       {isOpen && (
-        <div className="w-full absolute left-0 top-[72px] z-30 w-[180px] overflow-hidden rounded-[10px] border border-[#D8DBE2] bg-white py-2 shadow-[0_12px_28px_rgba(39,42,55,0.14)]">
+        <div className="absolute left-0 top-16 z-30 w-full overflow-hidden rounded-[10px] border border-[#D4D4E0] bg-white py-2 shadow-[0_10px_30px_0_rgba(44,46,85,0.13)]">
           {options.map((option) => (
             <button
               key={option.value}
@@ -247,7 +247,7 @@ const FilterSelect = ({
                 onChange(option.value);
                 setIsOpen(false);
               }}
-              className="block h-[44px] w-full px-5 text-left font-tbcx text-[16px] font-medium text-[#6F7383] transition hover:bg-[#F5F6F8]"
+              className="block h-[44px] w-full px-4 text-left font-tbcx text-[14px] font-medium text-[#6F7383] transition hover:bg-[#F5F6F8]"
             >
               {option.label}
             </button>
