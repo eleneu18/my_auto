@@ -20,10 +20,15 @@ const vehicleTypes: { value: VehicleType; icon: string; label: string }[] = [
 
 type FilterSidebarProps = {
   initialFilters: AppliedListingFilters;
+  totalCount: number;
   onApply: (filters: AppliedListingFilters) => void;
 };
 
-const FilterSidebar = ({ initialFilters, onApply }: FilterSidebarProps) => {
+const FilterSidebar = ({
+  initialFilters,
+  totalCount,
+  onApply,
+}: FilterSidebarProps) => {
   const [activeVehicleType, setActiveVehicleType] =
     useState<VehicleType>("car");
   const [draft, setDraft] = useState<AppliedListingFilters>(initialFilters);
@@ -213,7 +218,7 @@ const FilterSidebar = ({ initialFilters, onApply }: FilterSidebarProps) => {
           onClick={() => onApply(draft)}
           className="h-[48px] w-full rounded-[8px] bg-[#FD4100] text-[15px] font-bold text-white transition hover:bg-[#e83b00]"
         >
-          ძებნა
+          ძებნა {totalCount.toLocaleString("ka-GE")}
         </button>
       </div>
     </aside>

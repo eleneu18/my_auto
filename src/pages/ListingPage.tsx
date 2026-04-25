@@ -3,6 +3,7 @@ import Breadcrumb from "../features/listings/components/Breadcrumb";
 import CarCard from "../features/listings/components/CarCard";
 import FilterSidebar from "../features/listings/components/FilterSidebar";
 import ListingToolbar from "../features/listings/components/ListingToolbar";
+import CarCardSkeleton from "../features/listings/components/CarCardSkeleton";
 
 import { useProducts } from "../features/listings/hooks/useProducts";
 import { buildImageUrl } from "../features/listings/utils/buildImageUrl";
@@ -57,6 +58,7 @@ const ListingPage = () => {
         <div className="flex gap-5 w-full">
           <FilterSidebar
             initialFilters={filters}
+            totalCount={total}
             onApply={(nextFilters) => {
               setFilters(nextFilters);
               setCurrency(nextFilters.currency);
@@ -72,7 +74,11 @@ const ListingPage = () => {
               onPeriodChange={setPeriod}
             />
             {isLoading && (
-              <p className="text-[13px] text-[#6F7383]">იტვირთება...</p>
+              <div className="space-y-3">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <CarCardSkeleton key={index} />
+                ))}
+              </div>
             )}
             {error && <p className="text-[13px] text-[#FD4100]">{error}</p>}
             {!isLoading && !error && (
