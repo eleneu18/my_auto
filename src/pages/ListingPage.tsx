@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Header from "../features/listings/components/Header";
 import Breadcrumb from "../features/listings/components/Breadcrumb";
@@ -32,39 +32,166 @@ type StickerTag = {
   label: string;
   icon: "danger" | "goodCondition" | "clear";
 };
+
 const getVipLabel = (orderNumber: number): "S-VIP" | "VIP+" | "VIP" | null => {
   if (orderNumber >= 20) return "S-VIP";
   if (orderNumber >= 15) return "VIP+";
   if (orderNumber >= 10) return "VIP";
+
   return null;
 };
+
 const getStickerTags = (stickers: number | null): StickerTag[] => {
   if (!stickers) return [];
+
   const tags: StickerTag[] = [];
+
   if (stickers & 1) {
     tags.push({ label: "სასწრაფოდ", icon: "danger" });
   }
+
   if (stickers & 2) {
     tags.push({ label: "იდეალურ მდგომარეობაში", icon: "goodCondition" });
   }
+
   if (stickers & 4) {
     tags.push({ label: "სუფთა ისტორია", icon: "clear" });
   }
+
   return tags;
 };
 
+const currencyToCurrId: Record<Currency, string> = {
+  gel: "3",
+  usd: "1",
+};
+
+const currIdToCurrency: Record<string, Currency> = {
+  "3": "gel",
+  "1": "usd",
+};
+
+const parseNumberList = (value: string | null) => {
+  if (!value) return [];
+
+  return value
+    .split(".")
+    .map(Number)
+    .filter((value) => Number.isFinite(value));
+};
+
+const parseFiltersFromUrl = (): {
+  filters: AppliedListingFilters;
+  page: number;
+} => {
+  const params = new URLSearchParams(window.location.search);
+
+  const bargainType = params.get("bargainType");
+  const mansNModels = params.get("mansNModels");
+  const vehicleCats = params.get("vehicleCats");
+  const currId = params.get("currId");
+
+  const manufacturerIds: number[] = [];
+  const modelIds: number[] = [];
+
+  if (mansNModels) {
+    mansNModels.split("-").forEach((group) => {
+      const ids = parseNumberList(group);
+
+      if (ids.length > 0) {
+        manufacturerIds.push(ids[0]);
+        modelIds.push(...ids.slice(1));
+      }
+    });
+  }
+
+  const priceFrom = params.get("priceFrom");
+  const priceTo = params.get("priceTo");
+  const page = Number(params.get("page") ?? 1);
+
+  return {
+    page: Number.isFinite(page) && page > 0 ? page : 1,
+    filters: {
+      forRent:
+        bargainType === "0" || bargainType === "1"
+          ? (Number(bargainType) as 0 | 1)
+          : undefined,
+      manufacturerIds,
+      modelIds,
+      categoryIds: parseNumberList(vehicleCats),
+      priceFrom: priceFrom ? Number(priceFrom) : undefined,
+      priceTo: priceTo ? Number(priceTo) : undefined,
+      currency: currId ? (currIdToCurrency[currId] ?? "gel") : "gel",
+    },
+  };
+};
+
+const buildUrlParamsFromFilters = (
+  filters: AppliedListingFilters,
+  page: number,
+) => {
+  const params = new URLSearchParams();
+
+  params.set("vehicleType", "0");
+
+  if (filters.forRent !== undefined) {
+    params.set("bargainType", String(filters.forRent));
+  }
+
+  if (filters.manufacturerIds.length > 0) {
+    params.set(
+      "mansNModels",
+      filters.manufacturerIds
+        .map((manufacturerId) => {
+          const modelPart =
+            filters.modelIds.length > 0 ? `.${filters.modelIds.join(".")}` : "";
+
+          return `${manufacturerId}${modelPart}`;
+        })
+        .join("-"),
+    );
+  }
+
+  if (filters.categoryIds.length > 0) {
+    params.set("vehicleCats", filters.categoryIds.join("."));
+  }
+
+  if (filters.priceFrom !== undefined) {
+    params.set("priceFrom", String(filters.priceFrom));
+  }
+
+  if (filters.priceTo !== undefined) {
+    params.set("priceTo", String(filters.priceTo));
+  }
+
+  params.set("currId", currencyToCurrId[filters.currency]);
+  params.set("mileageType", "1");
+  params.set("page", String(page));
+  params.set("layoutId", "1");
+
+  return params;
+};
+
 const ListingPage = () => {
+  const initialUrlState = useMemo(() => parseFiltersFromUrl(), []);
+
   const [sortOrder, setSortOrder] = useState<SortOrder>(1);
   const [period, setPeriod] = useState<Period | undefined>("3h");
-  const [page, setPage] = useState(1);
-  const [currency, setCurrency] = useState<Currency>("gel");
+  const [page, setPage] = useState(initialUrlState.page);
+  const [currency, setCurrency] = useState<Currency>(
+    initialUrlState.filters.currency,
+  );
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<AppliedListingFilters>({
-    manufacturerIds: [],
-    modelIds: [],
-    categoryIds: [],
-    currency: "gel",
-  });
+  const [filters, setFilters] = useState<AppliedListingFilters>(
+    initialUrlState.filters,
+  );
+
+  useEffect(() => {
+    const params = buildUrlParamsFromFilters(filters, page);
+    const nextUrl = `${window.location.pathname}?${params.toString()}`;
+
+    window.history.replaceState(null, "", nextUrl);
+  }, [filters, page]);
 
   const selectedManufacturerId = filters.manufacturerIds[0];
 
@@ -126,9 +253,13 @@ const ListingPage = () => {
       }
     });
 
-    if (filters.priceFrom !== undefined)
+    if (filters.priceFrom !== undefined) {
       labels.push(`დან ${filters.priceFrom}`);
-    if (filters.priceTo !== undefined) labels.push(`მდე ${filters.priceTo}`);
+    }
+
+    if (filters.priceTo !== undefined) {
+      labels.push(`მდე ${filters.priceTo}`);
+    }
 
     return labels;
   }, [categoryOptions, filters, manufacturerOptions, modelOptions]);
@@ -270,6 +401,7 @@ const ListingPage = () => {
                       product.pred_first_breakpoint !== undefined &&
                       product.pred_first_breakpoint !== null &&
                       product.price_value <= product.pred_first_breakpoint);
+
                   return (
                     <CarCard
                       key={product.car_id}
