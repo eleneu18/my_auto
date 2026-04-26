@@ -60,11 +60,17 @@ const PriceInput = ({ placeholder, value, onChange }: PriceInputProps) => {
   return (
     <input
       type="number"
+      min={0}
       placeholder={placeholder}
       value={value ?? ""}
-      onChange={(event) =>
-        onChange(event.target.value ? Number(event.target.value) : undefined)
-      }
+      onChange={(event) => {
+        if (!event.target.value) {
+          onChange(undefined);
+          return;
+        }
+
+        onChange(Math.max(0, Number(event.target.value)));
+      }}
       className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none placeholder:text-[#8C929B] focus:border-[#6F7383]"
     />
   );
