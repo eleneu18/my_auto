@@ -61,6 +61,10 @@ const FilterSidebar = ({
     label: category.title,
   }));
 
+  useEffect(() => {
+    setDraft(initialFilters);
+  }, [initialFilters]);
+
   return (
     <aside className="w-full overflow-hidden rounded-t-[12px] border border-[#E2E5EB] bg-white shadow-[0_4px_16px_rgba(164,174,193,0.10)] md:w-[250px]">
       <div className="grid h-[48px] grid-cols-3 border-b border-[#E9EBF0]">
