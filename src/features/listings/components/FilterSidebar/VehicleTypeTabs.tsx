@@ -39,7 +39,7 @@ const VehicleTypeTabs = ({
             className={[
               "flex items-center justify-center border-r border-[#E9EBF0] transition last:border-r-0",
               isActive
-                ? "border-b-2 border-b-[#FD4100] bg-white"
+                ? "border-b-1 border-b-[#FD4100] bg-white"
                 : "bg-[#F9F9FB]",
             ].join(" ")}
           >
