@@ -95,7 +95,7 @@ const CarCard = ({
       )}
     >
       <div className="px-4 py-4 align-center md:flex md:min-h-[172px]">
-        <div className="mb-3 flex items-start justify-between gap-3 md:hidden">
+        <div className="mb-[10px] flex items-start justify-between gap-3 md:hidden">
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {vipLabel && (
               <Badge text={vipLabel} variant={getVipBadgeVariant(vipLabel)} />
@@ -179,7 +179,7 @@ const CarCard = ({
             </div>
           </div>
 
-          <div className="mt-4 flex items-start justify-between md:mt-6">
+          <div className="mt-3 flex items-start justify-between md:mt-6">
             <div className="grid w-full grid-cols-2 gap-x-8 gap-y-[15px] text-xs font-medium text-[#1B1D25] md:w-auto">
               <div className="flex items-center gap-2">
                 <img
