@@ -8,6 +8,7 @@ import usdIcon from "../../../assets/images/usd-icon.svg";
 import arrowRight from "../../../assets/images/arrow-icon.svg";
 import CategoryPillsSelect from "./CategoryPillsSelect";
 import MultiSelectDropdown from "./MultiSelectDropdown";
+import CurrencySwitcher from "../../../shared/ui/CurrencySwitcher";
 import { useCategories } from "../hooks/useCategories";
 import { useManufacturers } from "../hooks/useManufacturers";
 import { useModels } from "../hooks/useModels";
@@ -149,36 +150,12 @@ const FilterSidebar = ({
             ფასი
           </h3>
 
-          <div
-            role="button"
-            tabIndex={0}
-            aria-label="Toggle currency"
-            onClick={() =>
-              updateDraft({
-                currency: draft.currency === "gel" ? "usd" : "gel",
-              })
-            }
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                updateDraft({
-                  currency: draft.currency === "gel" ? "usd" : "gel",
-                });
-              }
-            }}
-            className="flex cursor-pointer rounded-full border border-[#D8DBE2] bg-white p-[2px]"
-          >
-            <CurrencyButton
-              label="Price in GEL"
-              icon={gelIcon}
-              isActive={draft.currency === "gel"}
-            />
-            <CurrencyButton
-              label="Price in USD"
-              icon={usdIcon}
-              isActive={draft.currency === "usd"}
-            />
-          </div>
+          <CurrencySwitcher
+            value={draft.currency}
+            onChange={(currency) => updateDraft({ currency })}
+            gelIcon={gelIcon}
+            usdIcon={usdIcon}
+          />
         </div>
 
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
@@ -283,27 +260,6 @@ const FilterSelect = ({
         </div>
       )}
     </div>
-  );
-};
-
-type CurrencyButtonProps = {
-  label: string;
-  icon: string;
-  isActive: boolean;
-};
-
-const CurrencyButton = ({ label, icon, isActive }: CurrencyButtonProps) => {
-  return (
-    <span
-      role="img"
-      aria-label={label}
-      className={[
-        "flex h-7 w-7 items-center justify-center rounded-full transition",
-        isActive ? "bg-[#272A37]" : "bg-white",
-      ].join(" ")}
-    >
-      <img src={icon} alt="" aria-hidden="true" className="h-4 w-4" />
-    </span>
   );
 };
 
