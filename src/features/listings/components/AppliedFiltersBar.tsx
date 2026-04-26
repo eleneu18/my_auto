@@ -12,7 +12,7 @@ const AppliedFiltersBar = ({
   onOpenFilters,
 }: AppliedFiltersBarProps) => {
   return (
-    <div className="mb-4 flex gap-2 overflow-x-auto md:hidden">
+    <div className="scrollbar-hidden mb-4 flex gap-2 overflow-x-auto md:hidden">
       <button
         type="button"
         onClick={onOpenFilters}
