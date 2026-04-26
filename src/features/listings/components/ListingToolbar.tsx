@@ -129,7 +129,7 @@ const ToolbarSelect = <T extends string | number>({
       {isOpen && (
         <div
           className={cn(
-            "absolute top-[48px] z-20 w-[180px] overflow-hidden rounded-[10px] border border-[#D4D4E0] bg-white py-2 shadow-[0_10px_30px_0_rgba(44,46,85,0.13)]",
+            "absolute top-[48px] z-20 w-[180px] max-h-[214px] overflow-y-auto rounded-[10px] border border-[#D4D4E0] bg-white py-2 shadow-[0_10px_30px_0_rgba(44,46,85,0.13)]",
             align === "right" ? "right-0" : "left-0",
           )}
         >
