@@ -9,7 +9,7 @@ import { useModels } from "../../hooks/useModels";
 import type { AppliedListingFilters } from "../../types";
 import FilterSelect from "./FilterSelect";
 import PriceRangeFilter from "./PriceRangeFilter";
-import VehicleTypeTabs, { type VehicleType } from "./VehicleTypeTabs";
+import VehicleTypeTabs from "./VehicleTypeTabs";
 
 type FilterSidebarProps = {
   initialFilters: AppliedListingFilters;
@@ -22,8 +22,6 @@ const FilterSidebar = ({
   totalCount,
   onApply,
 }: FilterSidebarProps) => {
-  const [activeVehicleType, setActiveVehicleType] =
-    useState<VehicleType>("car");
   const [draft, setDraft] = useState<AppliedListingFilters>(initialFilters);
 
   useEffect(() => {
@@ -58,8 +56,15 @@ const FilterSidebar = ({
   return (
     <aside className="w-full overflow-hidden rounded-t-[12px] border border-[#E2E5EB] bg-white shadow-[0_4px_16px_rgba(164,174,193,0.10)] md:w-[250px]">
       <VehicleTypeTabs
-        activeVehicleType={activeVehicleType}
-        onChange={setActiveVehicleType}
+        activeVehicleType={draft.vehicleType}
+        onChange={(vehicleType) =>
+          updateDraft({
+            vehicleType,
+            manufacturerIds: [],
+            modelIds: [],
+            categoryIds: [],
+          })
+        }
       />
 
       <div className="space-y-5 p-6 pt-[22px]">

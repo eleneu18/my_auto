@@ -241,6 +241,7 @@ const ListingPage = () => {
     filters.categoryIds.length > 0 ? filters.categoryIds.join(".") : undefined;
 
   const { products, total, meta, isLoading, error } = useProducts({
+    vehicleType: filters.vehicleType,
     sortOrder,
     period,
     forRent: filters.forRent,

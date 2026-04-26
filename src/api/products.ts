@@ -1,7 +1,7 @@
 import type { ProductFilters, ProductsResponse } from "../features/listings/types";
 import { buildSearchParams } from "../features/listings/utils/buildSearchParams";
 
-const PRODUCTS_URL = "https://api2.myauto.ge/ka/products/";
+const PRODUCTS_URL = "https://api2.myauto.ge/ka/products";
 
 export const getProducts = async (
   filters: ProductFilters = {},

@@ -3,7 +3,20 @@ import type {
   Currency,
   Period,
   SortOrder,
+  VehicleType,
 } from "../types";
+
+const vehicleTypeToId: Record<VehicleType, string> = {
+  car: "0",
+  tractor: "1",
+  moto: "2",
+};
+
+const idToVehicleType: Record<string, VehicleType> = {
+  "0": "car",
+  "1": "tractor",
+  "2": "moto",
+};
 
 const currencyToCurrId: Record<Currency, string> = {
   gel: "3",
@@ -66,6 +79,7 @@ export const parseFiltersFromUrl = (): {
 } => {
   const params = new URLSearchParams(window.location.search);
 
+  const vehicleType = params.get("vehicleType");
   const bargainType = params.get("bargainType");
   const mansNModels = params.get("mansNModels");
   const vehicleCats = params.get("vehicleCats");
@@ -92,6 +106,7 @@ export const parseFiltersFromUrl = (): {
     period: parsePeriod(params.get("period")),
     sortOrder: parseSortOrder(params.get("sortOrder")),
     filters: {
+      vehicleType: vehicleType ? (idToVehicleType[vehicleType] ?? "car") : "car",
       forRent:
         bargainType === "0" || bargainType === "1"
           ? (Number(bargainType) as 0 | 1)
@@ -114,7 +129,7 @@ export const buildUrlParamsFromFilters = (
 ) => {
   const params = new URLSearchParams();
 
-  params.set("vehicleType", "0");
+  params.set("vehicleType", vehicleTypeToId[filters.vehicleType]);
 
   if (filters.forRent !== undefined) {
     params.set("bargainType", String(filters.forRent));

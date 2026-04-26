@@ -1,8 +1,16 @@
 import type { ProductFilters } from "../types";
 
+const vehicleTypeToTypeId: Record<NonNullable<ProductFilters["vehicleType"]>, string> = {
+  car: "0",
+  tractor: "1",
+  moto: "2",
+};
+
 export const buildSearchParams = (filters: ProductFilters) => {
   const params = new URLSearchParams();
-
+  if (filters.vehicleType) {
+    params.set("TypeID", vehicleTypeToTypeId[filters.vehicleType]);
+  }
   if (filters.forRent !== undefined) {
     params.set("ForRent", String(filters.forRent));
   }
