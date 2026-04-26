@@ -18,7 +18,7 @@ const Badge = ({ text, variant = "primary", className = "" }: BadgeProps) => {
   return (
     <span
       className={cn(
-        "rounded-full px-2 py-1 font-tbcx text-[10px] font-bold uppercase leading-none text-white",
+        "rounded-full px-2 py-1 font-tbcx text-[10px] font-bold uppercase leading-none text-white whitespace-nowrap",
         variantClassNames[variant],
         className,
       )}

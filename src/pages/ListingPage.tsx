@@ -309,9 +309,7 @@ const ListingPage = () => {
 
                   const isGoodPrice =
                     product.prom_color === 1 ||
-                    (Boolean(product.has_predicted_price) &&
-                      product.pred_first_breakpoint !== undefined &&
-                      product.pred_first_breakpoint !== null &&
+                    (product.pred_first_breakpoint != null &&
                       product.price_value <= product.pred_first_breakpoint);
 
                   return (
