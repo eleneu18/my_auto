@@ -62,8 +62,10 @@ const getStickerTags = (stickers: number | null): StickerTag[] => {
 const ListingPage = () => {
   const initialUrlState = useMemo(() => parseFiltersFromUrl(), []);
 
-  const [sortOrder, setSortOrder] = useState<SortOrder>(1);
-  const [period, setPeriod] = useState<Period | undefined>("3h");
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    initialUrlState.sortOrder,
+  );
+  const [period, setPeriod] = useState<Period>(initialUrlState.period);
   const [page, setPage] = useState(initialUrlState.page);
   const [currency, setCurrency] = useState<Currency>(
     initialUrlState.filters.currency,
@@ -74,11 +76,11 @@ const ListingPage = () => {
   );
 
   useEffect(() => {
-    const params = buildUrlParamsFromFilters(filters, page);
+    const params = buildUrlParamsFromFilters(filters, page, period, sortOrder);
     const nextUrl = `${window.location.pathname}?${params.toString()}`;
 
     window.history.replaceState(null, "", nextUrl);
-  }, [filters, page]);
+  }, [filters, page, period, sortOrder]);
 
   const selectedManufacturerId = filters.manufacturerIds[0];
 
@@ -276,8 +278,14 @@ const ListingPage = () => {
               totalCount={total}
               sortOrder={sortOrder}
               period={period}
-              onSortChange={setSortOrder}
-              onPeriodChange={setPeriod}
+              onSortChange={(nextSortOrder) => {
+                setSortOrder(nextSortOrder);
+                setPage(1);
+              }}
+              onPeriodChange={(nextPeriod) => {
+                setPeriod(nextPeriod);
+                setPage(1);
+              }}
             />
 
             {isLoading && (

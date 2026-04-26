@@ -1,4 +1,9 @@
-import type { AppliedListingFilters, Currency } from "../types";
+import type {
+  AppliedListingFilters,
+  Currency,
+  Period,
+  SortOrder,
+} from "../types";
 
 const currencyToCurrId: Record<Currency, string> = {
   gel: "3",
@@ -9,6 +14,20 @@ const currIdToCurrency: Record<string, Currency> = {
   "3": "gel",
   "1": "usd",
 };
+
+const periods: Period[] = [
+  "1h",
+  "2h",
+  "3h",
+  "1d",
+  "2d",
+  "3d",
+  "1w",
+  "2w",
+  "3w",
+];
+
+const sortOrders: SortOrder[] = [1, 2, 3, 4, 5, 6];
 
 const parseNumberList = (value: string | null) => {
   if (!value) return [];
@@ -27,9 +46,23 @@ const parseOptionalNumber = (value: string | null) => {
   return Number.isFinite(numberValue) ? numberValue : undefined;
 };
 
+const parsePeriod = (value: string | null): Period => {
+  return value && periods.includes(value as Period) ? (value as Period) : "3h";
+};
+
+const parseSortOrder = (value: string | null): SortOrder => {
+  const numberValue = Number(value);
+
+  return sortOrders.includes(numberValue as SortOrder)
+    ? (numberValue as SortOrder)
+    : 1;
+};
+
 export const parseFiltersFromUrl = (): {
   filters: AppliedListingFilters;
   page: number;
+  period: Period;
+  sortOrder: SortOrder;
 } => {
   const params = new URLSearchParams(window.location.search);
 
@@ -56,6 +89,8 @@ export const parseFiltersFromUrl = (): {
 
   return {
     page: Number.isFinite(page) && page > 0 ? page : 1,
+    period: parsePeriod(params.get("period")),
+    sortOrder: parseSortOrder(params.get("sortOrder")),
     filters: {
       forRent:
         bargainType === "0" || bargainType === "1"
@@ -74,6 +109,8 @@ export const parseFiltersFromUrl = (): {
 export const buildUrlParamsFromFilters = (
   filters: AppliedListingFilters,
   page: number,
+  period: Period,
+  sortOrder: SortOrder,
 ) => {
   const params = new URLSearchParams();
 
@@ -111,6 +148,8 @@ export const buildUrlParamsFromFilters = (
 
   params.set("currId", currencyToCurrId[filters.currency]);
   params.set("mileageType", "1");
+  params.set("period", period);
+  params.set("sortOrder", String(sortOrder));
   params.set("page", String(page));
   params.set("layoutId", "1");
 
