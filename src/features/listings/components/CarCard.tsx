@@ -4,6 +4,8 @@ import mileageIcon from "../../../assets/images/mileage-icon.svg";
 import steeringWheelIcon from "../../../assets/images/steering-wheel-icon.svg";
 import pencilIcon from "../../../assets/images/pencil-icon.svg";
 import heartIcon from "../../../assets/images/heart-icon.svg";
+import heartFilledIcon from "../../../assets/images/heart-filled-icon.svg";
+import hotIcon from "../../../assets/images/hot-icon.svg";
 import compareIcon from "../../../assets/images/compare-icon.svg";
 import clearIcon from "../../../assets/images/clear-icon.svg";
 import goodConditionIcon from "../../../assets/images/good-condition-icon.svg";
@@ -91,26 +93,68 @@ const CarCard = ({
           : "border-transparent bg-white hover:border-[#BFDAD6]",
       )}
     >
-      <div className="md:flex md:min-h-[172px] px-4 py-4 align-center">
+      <div className="px-4 py-4 align-center md:flex md:min-h-[172px]">
+        <div className="mb-3 flex items-start justify-between gap-3 md:hidden">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            {vipLabel && (
+              <Badge text={vipLabel} variant={getVipBadgeVariant(vipLabel)} />
+            )}
+            <h3 className="truncate text-sm font-medium text-[#272A37]">
+              {title}
+              <span className="ml-2 text-[#8C929B]">{year} წ</span>
+            </h3>
+          </div>
+
+          <div
+            className={cn(
+              "flex shrink-0 items-center gap-1 font-tbcx text-[11px] font-medium",
+              customsPassed ? "text-[#26B753]" : "text-[#FF3B30]",
+            )}
+          >
+            {customsPassed && (
+              <img
+                src={checkMarkIcon}
+                alt=""
+                aria-hidden="true"
+                className="h-[6px] w-[7px]"
+              />
+            )}
+            <span>{customsPassed ? "განბაჟებული" : "განბაჟება 2,176 ₾"}</span>
+          </div>
+        </div>
+
+        <p className="mb-3 text-[20px] font-bold leading-none text-[#272A37] md:hidden">
+          {formatPrice(price)} {currencySymbol}
+        </p>
+
         <div className="relative h-full md:max-h-[144px] md:w-[248px] md:shrink-0">
           <img
             src={imageUrl}
             alt={`${title} ${year}`}
             className="h-64 w-full rounded-2xl object-cover md:h-[144px] md:w-full md:rounded-lg"
           />
+
+          <button
+            type="button"
+            aria-label="Favorite"
+            className="absolute right-3 top-3 flex items-center justify-center md:hidden"
+          >
+            <img
+              src={heartFilledIcon}
+              alt=""
+              aria-hidden="true"
+              className="h-[35px] w-[35px]"
+            />
+          </button>
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col px-4">
-          <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-1 flex-col md:px-4">
+          <div className="hidden items-start justify-between gap-3 md:flex">
             <div className="min-w-0">
               <h3 className="truncate text-sm font-medium text-[#272A37]">
                 {title}
                 <span className="ml-2 text-[#8C929B]">{year} წ</span>
               </h3>
-
-              <p className="mt-2 text-[20px] font-bold leading-none text-[#272A37] md:hidden">
-                {formatPrice(price)} {currencySymbol}
-              </p>
             </div>
 
             <div className="hidden min-w-[140px] flex-col items-end md:flex">
@@ -149,8 +193,8 @@ const CarCard = ({
             </div>
           </div>
 
-          <div className="mt-6 flex items-start justify-between">
-            <div className="grid grid-cols-2 gap-x-8 gap-y-[15px] text-xs font-medium text-[#1B1D25]">
+          <div className="mt-4 flex items-start justify-between md:mt-6">
+            <div className="grid w-full grid-cols-2 gap-x-8 gap-y-[15px] text-xs font-medium text-[#1B1D25] md:w-auto">
               <div className="flex items-center gap-2">
                 <img
                   src={engineIcon}
@@ -182,12 +226,29 @@ const CarCard = ({
               </div>
 
               <div className="flex items-center gap-2">
-                <img
-                  src={steeringWheelIcon}
-                  alt=""
-                  aria-hidden="true"
-                  className="h-4 w-4 shrink-0"
-                />
+                {shouldShowGeorgiaFlag ? (
+                  <>
+                    <img
+                      src={flagGeorgiaIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0 md:hidden"
+                    />
+                    <img
+                      src={steeringWheelIcon}
+                      alt=""
+                      aria-hidden="true"
+                      className="hidden h-4 w-4 shrink-0 md:block"
+                    />
+                  </>
+                ) : (
+                  <img
+                    src={steeringWheelIcon}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-4 w-4 shrink-0"
+                  />
+                )}
                 <span>{locationLabel}</span>
               </div>
             </div>
@@ -197,12 +258,22 @@ const CarCard = ({
             </p>
           </div>
 
-          <div className="mt-8 flex items-center justify-between text-xs font-normal text-[#6F7383]">
+          <div className="mt-6 flex items-center justify-between text-xs font-normal text-[#6F7383] md:mt-8">
             <div className="flex items-center gap-1">
               {vipLabel && (
-                <Badge text={vipLabel} variant={getVipBadgeVariant(vipLabel)} />
+                <Badge
+                  text={vipLabel}
+                  variant={getVipBadgeVariant(vipLabel)}
+                  className="hidden md:inline-block"
+                />
               )}
 
+              <img
+                src={hotIcon}
+                alt=""
+                aria-hidden="true"
+                className="mr-1 h-3 w-[11px] shrink-0 md:hidden"
+              />
               <span>{formatNumber(views)} ნახვა</span>
               <span>•</span>
               <span>{formatRelativeDate(orderDate)}</span>
@@ -238,7 +309,7 @@ const CarCard = ({
               <button
                 type="button"
                 aria-label="Favorite"
-                className="flex items-center"
+                className="hidden items-center md:flex"
               >
                 <img
                   src={heartIcon}
