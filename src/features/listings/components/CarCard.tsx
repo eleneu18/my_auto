@@ -46,6 +46,15 @@ const getStickerIcon = (icon: StickerTag["icon"]) => {
   return clearIcon;
 };
 
+const getVipBadgeClassName = (
+  vipLabel: NonNullable<CarCardProps["vipLabel"]>,
+) => {
+  if (vipLabel === "S-VIP") return "bg-[#FD4100]";
+  if (vipLabel === "VIP+") return "bg-[#FDB022]";
+
+  return "bg-[#3B6DFF]";
+};
+
 const CarCard = ({
   imageUrl,
   title,
@@ -81,21 +90,6 @@ const CarCard = ({
           alt={`${title} ${year}`}
           className="h-[210px] w-full object-cover md:h-full md:rounded-l-[14px]"
         />
-
-        {vipLabel && (
-          <span
-            className={[
-              "absolute bottom-3 left-3 rounded-full px-2 py-1 text-[10px] font-bold uppercase leading-none text-white",
-              vipLabel === "S-VIP"
-                ? "bg-[#FD4100]"
-                : vipLabel === "VIP+"
-                  ? "bg-[#FDB022]"
-                  : "bg-[#3B6DFF]",
-            ].join(" ")}
-          >
-            {vipLabel}
-          </span>
-        )}
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col px-4 py-3">
@@ -181,6 +175,17 @@ const CarCard = ({
 
         <div className="mt-auto flex items-center justify-between pt-3 text-xs font-normal text-[#6F7383]">
           <div className="flex items-center gap-2">
+            {vipLabel && (
+              <span
+                className={[
+                  "rounded-full px-2 py-1 font-tbcx text-[10px] font-bold uppercase leading-none text-white",
+                  getVipBadgeClassName(vipLabel),
+                ].join(" ")}
+              >
+                {vipLabel}
+              </span>
+            )}
+
             <span>{formatNumber(views)} ნახვა</span>
             <span>•</span>
             <span>{formatRelativeDate(orderDate)}</span>
