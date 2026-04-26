@@ -92,11 +92,11 @@ const CarCard = ({
       )}
     >
       <div className="md:flex md:min-h-[172px] px-4 py-4 align-center">
-        <div className="relative h-full max-h-[144px] md:w-[248px] md:shrink-0">
+        <div className="relative h-full md:max-h-[144px] md:w-[248px] md:shrink-0">
           <img
             src={imageUrl}
             alt={`${title} ${year}`}
-            className="h-[238px] w-full rounded-2xl object-cover md:h-[144px] md:w-full md:rounded-lg"
+            className="h-64 w-full rounded-2xl object-cover md:h-[144px] md:w-full md:rounded-lg"
           />
         </div>
 

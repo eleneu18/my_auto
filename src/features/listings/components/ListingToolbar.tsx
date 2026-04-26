@@ -52,7 +52,7 @@ const ListingToolbar = ({
     sortOptions.find((option) => option.value === sortOrder) ?? sortOptions[0];
 
   return (
-    <div className="mb-4 flex items-center justify-between gap-4">
+    <div className="mb-4 flex flex-col md:flex-row flex-start md:flex-center md:items-center justify-between gap-4">
       <h1 className="text-[16px] leading-none text-[#272A37] font-helvetica-geo">
         {totalCount.toLocaleString("ka-GE")} განცხადება
       </h1>
