@@ -53,11 +53,11 @@ const ListingToolbar = ({
 
   return (
     <div className="mb-4 flex items-center justify-between gap-4">
-      <h1 className="text-[16px] font-medium leading-none text-[#272A37]">
+      <h1 className="text-[16px] leading-none text-[#272A37] font-helvetica-geo">
         {totalCount.toLocaleString("ka-GE")} განცხადება
       </h1>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <ToolbarSelect
           value={selectedPeriod.label}
           options={periodOptions}
@@ -112,7 +112,7 @@ const ToolbarSelect = <T extends string | number>({
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="flex h-[40px] min-w-[156px] items-center justify-between gap-4 rounded-[10px] border border-[#D8DBE2] bg-white px-4 font-tbcx text-[13px] font-medium text-[#454857]"
+        className="flex h-[40px] min-w-[140px] items-center justify-between gap-4 rounded-lg border border-[#E9E9F0] bg-white px-4 font-tbcx text-[12px] font-medium text-[#454857] cursor-pointer"
       >
         <span>{value}</span>
         <img
@@ -141,7 +141,7 @@ const ToolbarSelect = <T extends string | number>({
                 onChange(option);
                 setIsOpen(false);
               }}
-              className="block h-[44px] w-full px-4 text-left font-tbcx text-[14px] font-medium text-[#6F7383] transition hover:bg-[#F5F6F8]"
+              className="block cursor-pointer w-full pt-[7px] pb-2 pl-[15px] text-left text-[14px] font-helvetica-geo font-medium text-[#6F7383] transition hover:bg-[#F2F3F6] hover:text-[#272A37]"
             >
               {option.label}
             </button>
