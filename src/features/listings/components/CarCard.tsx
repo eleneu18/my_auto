@@ -9,6 +9,7 @@ import clearIcon from "../../../assets/images/clear-icon.svg";
 import goodConditionIcon from "../../../assets/images/good-condition-icon.svg";
 import dangerIcon from "../../../assets/images/danger-icon.svg";
 import Badge from "../../../shared/ui/Badge";
+import checkMarkIcon from "../../../assets/images/check-mark-icon.svg";
 import { cn } from "../../../shared/utils/cn";
 
 import {
@@ -116,7 +117,14 @@ const CarCard = ({
                   customsPassed ? "text-[#26B753]" : "text-[#FF3B30]",
                 )}
               >
-                <span>{customsPassed ? "✓" : "!"}</span>
+                {customsPassed && (
+                  <img
+                    src={checkMarkIcon}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-3 w-3"
+                  />
+                )}
                 <span>
                   {customsPassed ? "განბაჟებული" : "განბაჟება 2,176 ₾"}
                 </span>
