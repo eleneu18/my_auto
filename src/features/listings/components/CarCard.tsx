@@ -91,16 +91,16 @@ const CarCard = ({
           : "border-transparent bg-white hover:border-[#BFDAD6]",
       )}
     >
-      <div className="md:flex md:min-h-[172px] px-4 py-4">
-        <div className="relative md:w-[182px] md:shrink-0">
+      <div className="md:flex md:min-h-[172px] px-4 py-4 align-center">
+        <div className="relative h-full max-h-[144px] md:w-[248px] md:shrink-0">
           <img
             src={imageUrl}
             alt={`${title} ${year}`}
-            className="h-[238px] w-full object-cover md:h-36 rounded-2xl md:rounded-lg"
+            className="h-[238px] w-full rounded-2xl object-cover md:h-[144px] md:w-full md:rounded-lg"
           />
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col px-4 py-3">
+        <div className="flex min-w-0 flex-1 flex-col px-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h3 className="truncate text-sm font-medium text-[#272A37]">
