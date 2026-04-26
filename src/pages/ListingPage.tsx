@@ -205,6 +205,37 @@ const ListingPage = () => {
     page,
   });
 
+  const getVipLabel = (paidAdd: number) => {
+    if (paidAdd === 1) return "VIP";
+    if (paidAdd === 2) return "VIP+";
+    if (paidAdd >= 3) return "S-VIP";
+
+    return null;
+  };
+
+  const getStickerTags = (stickers: number | null) => {
+    if (!stickers) return [];
+
+    const tags = [];
+
+    if (stickers & 1) {
+      tags.push({ label: "სასწრაფოდ", variant: "danger" as const });
+    }
+
+    if (stickers & 2) {
+      tags.push({
+        label: "იდეალურ მდგომარეობაში",
+        variant: "success" as const,
+      });
+    }
+
+    if (stickers & 4) {
+      tags.push({ label: "სუფთა ისტორია", variant: "info" as const });
+    }
+
+    return tags;
+  };
+
   return (
     <div className="min-h-screen bg-[#f2f3f6]">
       <Header />
@@ -271,10 +302,14 @@ const ListingPage = () => {
                       mileageKm={product.car_run_km}
                       engine={`${product.engine_volume / 1000} ძრავი`}
                       transmission={`კოლოფი #${product.gear_type_id}`}
-                      location="თბილისი"
                       customsPassed={product.customs_passed}
-                      isVip={false}
-                      isGoodPrice={isGoodPrice}
+                      locationId={product.location_id}
+                      parentLocationId={product.parent_loc_id}
+                      views={product.views}
+                      orderDate={product.order_date}
+                      vipLabel={getVipLabel(product.paid_add)}
+                      tags={getStickerTags(product.stickers)}
+                      isGoodPrice={isGoodPrice || product.prom_color === 1}
                     />
                   );
                 })}

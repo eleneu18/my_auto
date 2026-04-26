@@ -37,6 +37,11 @@ export type Product = {
       insert_Date: string;
     } | null;
     comfort_features: number[];
+    paid_add: number;
+    order_number: number;
+    stickers: number | null;
+    prom_color: number;
+    special_persons: boolean;
   };
   
   export type ProductsMeta = {
