@@ -1,26 +1,26 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type AppButtonVariant = "primary" | "secondary";
+type ButtonVariant = "primary" | "secondary";
 
-type AppButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: AppButtonVariant;
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: ButtonVariant;
   children: ReactNode;
 };
 
-const variantClassNames: Record<AppButtonVariant, string> = {
+const variantClassNames: Record<ButtonVariant, string> = {
   primary:
     "h-8 rounded-md bg-[#FD4100] font-tbcx text-[14px] font-bold leading-none text-white transition hover:bg-[#e83b00]",
   secondary:
     "h-[40px] rounded-[8px] bg-[#272A37] font-tbcx text-[13px] font-bold leading-none text-white transition hover:bg-[#1f222d]",
 };
 
-const AppButton = ({
+const Button = ({
   variant = "primary",
   children,
   className = "",
   type = "button",
   ...props
-}: AppButtonProps) => {
+}: ButtonProps) => {
   return (
     <button
       type={type}
@@ -36,4 +36,4 @@ const AppButton = ({
   );
 };
 
-export default AppButton;
+export default Button;

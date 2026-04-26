@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import arrowRight from "../../../assets/images/arrow-icon.svg";
-import AppButton from "../../../shared/ui/AppButton";
+import Button from "../../../shared/ui/Button";
 
 type CategoryOption = {
   id: number;
@@ -101,13 +101,13 @@ const CategoryPillsSelect = ({
               })}
             </div>
           </div>
-          <AppButton
+          <Button
             variant="secondary"
             className="mt-4"
             onClick={() => setIsOpen(false)}
           >
             არჩევა
-          </AppButton>
+          </Button>
         </div>
       )}
     </div>
