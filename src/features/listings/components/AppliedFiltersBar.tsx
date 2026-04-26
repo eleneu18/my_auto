@@ -1,3 +1,5 @@
+import removeRoundedIcon from "../../../assets/images/remove-rounded.svg";
+
 type AppliedFiltersBarProps = {
   labels: string[];
   onClearOne: (label: string) => void;
@@ -24,10 +26,15 @@ const AppliedFiltersBar = ({
           key={label}
           type="button"
           onClick={() => onClearOne(label)}
-          className="flex shrink-0 items-center gap-2 rounded-[10px] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37]"
+          className="flex shrink-0 items-center gap-2 rounded-[100px] bg-white px-4 py-2 text-[12px] font-normal text-[#272A37]"
         >
           <span>{label}</span>
-          <span className="text-[#6F7383]">×</span>
+          <img
+            src={removeRoundedIcon}
+            alt=""
+            aria-hidden="true"
+            className="h-5 w-5 shrink-0"
+          />
         </button>
       ))}
     </div>
