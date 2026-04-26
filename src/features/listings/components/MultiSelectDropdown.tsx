@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import arrowRight from "../../../assets/images/arrow-icon.svg";
+import AppButton from "../../../shared/ui/AppButton";
 
 type MultiSelectOption = {
   id: number;
@@ -145,13 +146,13 @@ const MultiSelectDropdown = ({
             </div>
           </div>
 
-          <button
-            type="button"
+          <AppButton
+            variant="secondary"
+            className="mt-4"
             onClick={() => setIsOpen(false)}
-            className="mt-4 h-[40px] w-full rounded-[8px] bg-[#272A37] text-[13px] font-bold text-white"
           >
             არჩევა
-          </button>
+          </AppButton>
         </div>
       )}
     </div>

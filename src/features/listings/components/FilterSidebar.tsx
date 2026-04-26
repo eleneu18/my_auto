@@ -9,6 +9,7 @@ import arrowRight from "../../../assets/images/arrow-icon.svg";
 import CategoryPillsSelect from "./CategoryPillsSelect";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import CurrencySwitcher from "../../../shared/ui/CurrencySwitcher";
+import AppButton from "../../../shared/ui/AppButton";
 import { useCategories } from "../hooks/useCategories";
 import { useManufacturers } from "../hooks/useManufacturers";
 import { useModels } from "../hooks/useModels";
@@ -176,13 +177,9 @@ const FilterSidebar = ({
       </div>
 
       <div className="bg-white pt-4 pb-5 px-[23px] shadow-[0_-8px_18px_rgba(39,42,55,0.05)]">
-        <button
-          type="button"
-          onClick={() => onApply(draft)}
-          className="h-8 w-full rounded-md bg-[#FD4100] font-tbcx text-[14px] font-bold leading-none text-white transition hover:bg-[#e83b00]"
-        >
+        <AppButton onClick={() => onApply(draft)}>
           ძებნა {totalCount.toLocaleString("ka-GE")}
-        </button>
+        </AppButton>
       </div>
     </aside>
   );
