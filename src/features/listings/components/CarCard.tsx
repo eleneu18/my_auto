@@ -196,7 +196,7 @@ const CarCard = ({
         </div>
 
         <div className="flex items-center justify-between mt-8 text-xs font-normal text-[#6F7383]">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {vipLabel && (
               <Badge text={vipLabel} variant={getVipBadgeVariant(vipLabel)} />
             )}
