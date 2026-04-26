@@ -37,7 +37,7 @@ const VehicleTypeTabs = ({
             aria-label={item.label}
             onClick={() => onChange(item.value)}
             className={[
-              "flex items-center justify-center border-r border-[#E9EBF0] transition last:border-r-0",
+              "flex items-center justify-center border-r border-[#E9EBF0] cursor-pointer transition last:border-r-0",
               isActive
                 ? "border-b-1 border-b-[#FD4100] bg-white"
                 : "bg-[#F9F9FB]",
@@ -48,8 +48,8 @@ const VehicleTypeTabs = ({
               alt=""
               aria-hidden="true"
               className={[
-                "h-6 w-6",
-                isActive ? "opacity-100" : "opacity-45 grayscale",
+                "h-6 w-6 transition",
+                isActive ? "opacity-100" : "opacity-55 grayscale",
               ].join(" ")}
             />
           </button>
