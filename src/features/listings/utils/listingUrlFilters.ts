@@ -19,6 +19,14 @@ const parseNumberList = (value: string | null) => {
     .filter((value) => Number.isFinite(value));
 };
 
+const parseOptionalNumber = (value: string | null) => {
+  if (!value) return undefined;
+
+  const numberValue = Number(value);
+
+  return Number.isFinite(numberValue) ? numberValue : undefined;
+};
+
 export const parseFiltersFromUrl = (): {
   filters: AppliedListingFilters;
   page: number;
@@ -44,8 +52,6 @@ export const parseFiltersFromUrl = (): {
     });
   }
 
-  const priceFrom = params.get("priceFrom");
-  const priceTo = params.get("priceTo");
   const page = Number(params.get("page") ?? 1);
 
   return {
@@ -58,8 +64,8 @@ export const parseFiltersFromUrl = (): {
       manufacturerIds,
       modelIds,
       categoryIds: parseNumberList(vehicleCats),
-      priceFrom: priceFrom ? Number(priceFrom) : undefined,
-      priceTo: priceTo ? Number(priceTo) : undefined,
+      priceFrom: parseOptionalNumber(params.get("priceFrom")),
+      priceTo: parseOptionalNumber(params.get("priceTo")),
       currency: currId ? (currIdToCurrency[currId] ?? "gel") : "gel",
     },
   };

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import Header from "../features/listings/components/Header";
-import Breadcrumb from "../features/listings/components/Breadcrumb";
+import Breadcrumb from "../shared/ui/Breadcrumb";
 import CarCard from "../features/listings/components/CarCard";
 import FilterSidebar from "../features/listings/components/FilterSidebar/FilterSidebar";
 import ListingToolbar from "../features/listings/components/ListingToolbar";
@@ -25,12 +25,6 @@ import type {
   Period,
   SortOrder,
 } from "../features/listings/types";
-
-const breadcrumbItems = [
-  { label: "მთავარი", href: "/" },
-  { label: "ავტო", href: "/ka" },
-  { label: "მანქანები" },
-];
 
 type StickerTag = {
   label: string;
@@ -121,6 +115,21 @@ const ListingPage = () => {
       })),
     [categories],
   );
+
+  const breadcrumbItems = useMemo(() => {
+    const lastLabel =
+      filters.forRent === 0
+        ? "იყიდება"
+        : filters.forRent === 1
+          ? "ქირავდება"
+          : "მანქანები";
+
+    return [
+      { label: "მთავარი", href: "/" },
+      { label: "ავტო", href: "/ka" },
+      { label: lastLabel },
+    ];
+  }, [filters.forRent]);
 
   const appliedFilterLabels = useMemo(() => {
     const labels: string[] = [];

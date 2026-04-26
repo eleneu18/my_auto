@@ -1,6 +1,6 @@
-import arrowRight from "../../../assets/images/arrow-icon.svg";
+import arrowRight from "../../assets/images/arrow-icon.svg";
 
-type BreadcrumbItem = {
+export type BreadcrumbItem = {
   label: string;
   href?: string;
 };
