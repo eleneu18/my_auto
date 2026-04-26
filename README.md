@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# myauto.ge clone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive React + TypeScript clone of the [myauto.ge](https://www.myauto.ge) car listings page. The app fetches live data from myauto's public API (manufacturers, models, categories, products, currencies), supports filtering, sorting, pagination, currency switching, and renders both desktop and mobile-optimized car cards.
 
-Currently, two official plugins are available:
+## Tech stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **TypeScript** (Vite)
+- **Tailwind CSS 4** (via `@tailwindcss/vite`)
+- **TanStack Query** for data fetching, caching, and request deduplication
+- **Axios** + native `fetch` for API calls
+- **ESLint** with TypeScript and React Hooks plugins
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Live car listings from `api2.myauto.ge`
+- Filter sidebar: vehicle type, manufacturer, model, category, price range, currency
+- Toolbar: sort order, period, search field
+- URL-synced filters (shareable links, browser back/forward works)
+- Pagination
+- Currency switcher (GEL / USD) with live rate conversion
+- Responsive `CarCard`:
+  - Desktop layout (≥ 1024px): horizontal card with image left, info right
+  - Mobile layout (< 1024px): stacked card with image, customs status badge, and heart overlay
+- Reusable UI primitives in `src/shared/ui` (Badge, Button, Breadcrumb, CurrencySwitcher, CustomsStatusBadge, etc.)
+- Client-side calculation of Georgian customs fee from `engine_volume`, `prod_year`, and `fuel_type_id`
+- "Good price" highlighting based on myauto's predicted-price breakpoint and paid promo flag
 
-## Expanding the ESLint configuration
+## Project structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+  api/                       Thin wrappers around myauto.ge endpoints
+  app/                       App shell, root component, React Query client
+  assets/                    Static images and SVG icons
+  features/listings/
+    components/              Listing-specific UI (CarCard, FilterSidebar, Toolbar, ...)
+    hooks/                   useProducts, useManufacturers, useModels, useCategories, useCurrencies
+    utils/                   Formatters, URL filter (de)serialization, image URL builder
+    types.ts                 API and domain types
+  pages/
+    ListingPage.tsx          Main listings page (assembles everything)
+  shared/
+    ui/                      Generic, reusable UI components
+    utils/                   Shared helpers (e.g. `cn`)
+  main.tsx                   Vite entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 20+ (or any version compatible with Vite 8)
+- npm (bundled with Node)
+
+### Install
+
+```bash
+npm install
 ```
+
+### Run the dev server
+
+```bash
+npm run dev
+```
+
+The app starts on the default Vite port (usually [http://localhost:5173](http://localhost:5173)).
+
+### Build for production
+
+```bash
+npm run build
+```
+
+Outputs a static bundle in `dist/`.
+
+### Preview the production build locally
+
+```bash
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## API
+
+The app talks directly to the public myauto.ge API. No keys or auth are required:
+
+- `https://api2.myauto.ge/ka/products` — listings (filterable, paginated)
+- `https://api2.myauto.ge/ka/getManModels?man_id={id}` — models for a manufacturer
+- `https://api2.myauto.ge/ka/cats/get` — categories
+- `https://api2.myauto.ge/ka/currency` — currency rates
+
+See `src/api/` for the request shapes and `src/features/listings/types.ts` for the response types.
+
+## Notes
+
+- The Georgian customs fee shown on each card is **calculated client-side** in `src/features/listings/utils/carCardFormatters.ts` (`calculateCustomsFee` / `formatCustomsFee`). The rates inside `getExciseRatePerCm3` are an approximation of the official excise table — adjust them there if myauto's published rates change.
+- The breakpoint for switching `CarCard` from mobile to desktop is `lg` (1024px).
