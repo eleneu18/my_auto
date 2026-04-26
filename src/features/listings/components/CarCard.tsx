@@ -8,8 +8,8 @@ import compareIcon from "../../../assets/images/compare-icon.svg";
 import clearIcon from "../../../assets/images/clear-icon.svg";
 import goodConditionIcon from "../../../assets/images/good-condition-icon.svg";
 import dangerIcon from "../../../assets/images/danger-icon.svg";
-import Badge from "../../../shared/ui/Badge";
 import checkMarkIcon from "../../../assets/images/check-mark-icon.svg";
+import Badge from "../../../shared/ui/Badge";
 import { cn } from "../../../shared/utils/cn";
 
 import {
@@ -82,7 +82,7 @@ const CarCard = ({
   return (
     <article
       className={cn(
-        "overflow-hidden rounded-[14px] border transition hover:shadow-sm md:flex md:min-h-[164px]",
+        "overflow-hidden rounded-[14px] border transition hover:shadow-sm md:flex md:min-h-[172px]",
         isGoodPrice
           ? "border-[#59D8C9] bg-[#F0F9F7]"
           : "border-transparent bg-white hover:border-[#BFDAD6]",
@@ -109,8 +109,8 @@ const CarCard = ({
             </p>
           </div>
 
-          <div className="hidden flex-col items-end md:flex">
-            <div className="flex items-center gap-5">
+          <div className="hidden min-w-[140px] flex-col items-end md:flex">
+            <div className="flex items-center gap-4">
               <div
                 className={cn(
                   "flex items-center gap-1 text-[11px] font-medium",
@@ -135,56 +135,57 @@ const CarCard = ({
                 <span>{locationLabel}</span>
               </div>
             </div>
-
-            <p className="mt-5 text-[20px] font-medium leading-none text-[#272A37]">
-              {formatPrice(price)} {currencySymbol}
-            </p>
           </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-xs font-medium text-[#1B1D25]">
-          <div className="flex items-center gap-2">
-            <img
-              src={engineIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-4 w-4 shrink-0"
-            />
-            <span>{engine}</span>
-          </div>
+        <div className="flex justify-between align-start mt-6">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-[15px] text-xs font-medium text-[#1B1D25]">
+            <div className="flex items-center gap-2">
+              <img
+                src={engineIcon}
+                alt=""
+                aria-hidden="true"
+                className="h-4 w-4 shrink-0"
+              />
+              <span>{engine}</span>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <img
-              src={mileageIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-4 w-4 shrink-0"
-            />
-            <span>{formatNumber(mileageKm)} კმ</span>
-          </div>
+            <div className="flex items-center gap-2">
+              <img
+                src={mileageIcon}
+                alt=""
+                aria-hidden="true"
+                className="h-4 w-4 shrink-0"
+              />
+              <span>{formatNumber(mileageKm)} კმ</span>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <img
-              src={gearboxIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-4 w-4 shrink-0"
-            />
-            <span>{transmission}</span>
-          </div>
+            <div className="flex items-center gap-2">
+              <img
+                src={gearboxIcon}
+                alt=""
+                aria-hidden="true"
+                className="h-4 w-4 shrink-0"
+              />
+              <span>{transmission}</span>
+            </div>
 
-          <div className="flex items-center gap-2">
-            <img
-              src={steeringWheelIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-4 w-4 shrink-0"
-            />
-            <span>{locationLabel}</span>
+            <div className="flex items-center gap-2">
+              <img
+                src={steeringWheelIcon}
+                alt=""
+                aria-hidden="true"
+                className="h-4 w-4 shrink-0"
+              />
+              <span>{locationLabel}</span>
+            </div>
           </div>
+          <p className="text-[20px] font-bold leading-none text-[#272A37]">
+            {formatPrice(price)} {currencySymbol}
+          </p>
         </div>
 
-        <div className="mt-auto flex items-center justify-between pt-3 text-xs font-normal text-[#6F7383]">
+        <div className="flex items-center justify-between mt-8 text-xs font-normal text-[#6F7383]">
           <div className="flex items-center gap-2">
             {vipLabel && (
               <Badge text={vipLabel} variant={getVipBadgeVariant(vipLabel)} />
