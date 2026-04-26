@@ -24,3 +24,47 @@ export const formatPrice = (price: number) =>
   
     return `${diffDays} დღის წინ`;
   };
+
+  const getExciseRatePerCm3 = (ageYears: number) => {
+    if (ageYears <= 0) return 0.05;
+    if (ageYears === 1) return 0.1;
+    if (ageYears === 2) return 0.2;
+    if (ageYears === 3) return 0.4;
+    if (ageYears === 4) return 0.5;
+    if (ageYears === 5) return 0.6;
+    if (ageYears === 6) return 0.7;
+    if (ageYears <= 12) return 1.0;
+    if (ageYears === 13) return 2.0;
+    return 3.0;
+  };
+
+  const ELECTRIC_FUEL_TYPE_ID = 7;
+  const HYBRID_FUEL_TYPE_IDS = new Set([5, 6]);
+
+  export const calculateCustomsFee = (
+    engineVolumeCm3: number,
+    prodYear: number,
+    fuelTypeId: number,
+    referenceYear: number = new Date().getFullYear(),
+  ): number => {
+    if (fuelTypeId === ELECTRIC_FUEL_TYPE_ID) return 0;
+    if (!engineVolumeCm3 || engineVolumeCm3 <= 0) return 0;
+
+    const ageYears = Math.max(0, referenceYear - prodYear);
+    let fee = engineVolumeCm3 * getExciseRatePerCm3(ageYears);
+
+    if (engineVolumeCm3 > 3500) fee *= 1.5;
+    if (HYBRID_FUEL_TYPE_IDS.has(fuelTypeId)) fee *= 0.6;
+
+    return Math.round(fee);
+  };
+
+  export const formatCustomsFee = (
+    engineVolumeCm3: number,
+    prodYear: number,
+    fuelTypeId: number,
+  ): string => {
+    const fee = calculateCustomsFee(engineVolumeCm3, prodYear, fuelTypeId);
+
+    return `${formatNumber(fee)} ₾`;
+  };

@@ -15,6 +15,7 @@ import { useModels } from "../features/listings/hooks/useModels";
 import { useCategories } from "../features/listings/hooks/useCategories";
 import { useCurrencies } from "../features/listings/hooks/useCurrencies";
 import { buildImageUrl } from "../features/listings/utils/buildImageUrl";
+import { formatCustomsFee } from "../features/listings/utils/carCardFormatters";
 import {
   buildUrlParamsFromFilters,
   parseFiltersFromUrl,
@@ -325,6 +326,11 @@ const ListingPage = () => {
                       engine={`${product.engine_volume / 1000} ძრავი`}
                       transmission={`კოლოფი #${product.gear_type_id}`}
                       customsPassed={product.customs_passed}
+                      customsFee={formatCustomsFee(
+                        product.engine_volume,
+                        product.prod_year,
+                        product.fuel_type_id,
+                      )}
                       locationId={product.location_id}
                       parentLocationId={product.parent_loc_id}
                       views={product.views}

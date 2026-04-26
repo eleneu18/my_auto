@@ -38,6 +38,7 @@ type CarCardProps = {
   engine: string;
   transmission: string;
   customsPassed?: boolean;
+  customsFee?: string;
   isGoodPrice?: boolean;
   locationId: number;
   parentLocationId: number;
@@ -73,6 +74,7 @@ const CarCard = ({
   engine,
   transmission,
   customsPassed = false,
+  customsFee,
   isGoodPrice = false,
   locationId,
   parentLocationId,
@@ -94,8 +96,8 @@ const CarCard = ({
           : "border-transparent bg-white hover:border-[#BFDAD6]",
       )}
     >
-      <div className="px-4 py-4 align-center md:flex md:min-h-[172px]">
-        <div className="mb-[10px] flex items-start justify-between gap-3 md:hidden">
+      <div className="px-4 py-4 align-center lg:flex lg:min-h-[172px]">
+        <div className="mb-[10px] flex items-start justify-between gap-3 lg:hidden">
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {vipLabel && (
               <Badge text={vipLabel} variant={getVipBadgeVariant(vipLabel)} />
@@ -106,24 +108,28 @@ const CarCard = ({
             </h3>
           </div>
 
-          <CustomsStatusBadge passed={customsPassed} className="shrink-0" />
+          <CustomsStatusBadge
+            passed={customsPassed}
+            fee={customsFee}
+            className="shrink-0"
+          />
         </div>
 
-        <p className="mb-3 text-[20px] font-bold leading-none text-[#272A37] md:hidden">
+        <p className="mb-3 text-[20px] font-bold leading-none text-[#272A37] lg:hidden">
           {formatPrice(price)} {currencySymbol}
         </p>
 
-        <div className="relative h-full md:max-h-[144px] md:w-[248px] md:shrink-0">
+        <div className="relative h-full lg:max-h-[144px] lg:w-[248px] lg:shrink-0">
           <img
             src={imageUrl}
             alt={`${title} ${year}`}
-            className="h-64 w-full rounded-2xl object-cover md:h-[144px] md:w-full md:rounded-lg"
+            className="h-64 w-full rounded-2xl object-cover lg:h-[144px] lg:w-full lg:rounded-lg"
           />
 
           <button
             type="button"
             aria-label="Favorite"
-            className="absolute right-3 top-3 flex items-center justify-center md:hidden"
+            className="absolute right-3 top-3 flex items-center justify-center lg:hidden"
           >
             <img
               src={heartFilledIcon}
@@ -134,8 +140,8 @@ const CarCard = ({
           </button>
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col md:px-4">
-          <div className="hidden items-start justify-between gap-3 md:flex">
+        <div className="flex min-w-0 flex-1 flex-col lg:px-4">
+          <div className="hidden items-start justify-between gap-3 lg:flex">
             <div className="min-w-0">
               <h3 className="truncate text-sm font-medium text-[#272A37]">
                 {title}
@@ -143,11 +149,11 @@ const CarCard = ({
               </h3>
             </div>
 
-            <div className="hidden min-w-[140px] flex-col items-end md:flex">
+            <div className="hidden min-w-[140px] flex-col items-end lg:flex">
               <div className="flex items-center gap-4">
                 <div
                   className={cn(
-                    "flex items-center gap-1 font-tbcx text-[11px] font-medium",
+                    "flex items-center gap-1 font-tbcx text-[11px] font-medium whitespace-nowrap",
                     customsPassed ? "text-[#26B753]" : "text-[#FF3B30]",
                   )}
                 >
@@ -160,7 +166,9 @@ const CarCard = ({
                     />
                   )}
                   <span>
-                    {customsPassed ? "განბაჟებული" : "განბაჟება 2,176 ₾"}
+                    {customsPassed
+                      ? "განბაჟებული"
+                      : `განბაჟება ${customsFee ?? "0"}`}
                   </span>
                 </div>
 
@@ -179,8 +187,8 @@ const CarCard = ({
             </div>
           </div>
 
-          <div className="mt-3 flex items-start justify-between md:mt-6">
-            <div className="grid w-full grid-cols-2 gap-x-8 gap-y-[15px] text-xs font-medium text-[#1B1D25] md:w-auto">
+          <div className="mt-3 flex items-start justify-between lg:mt-6">
+            <div className="grid w-full grid-cols-2 gap-x-8 gap-y-[15px] text-xs font-medium text-[#1B1D25] lg:w-auto">
               <div className="flex items-center gap-2">
                 <img
                   src={engineIcon}
@@ -218,13 +226,13 @@ const CarCard = ({
                       src={flagGeorgiaIcon}
                       alt=""
                       aria-hidden="true"
-                      className="h-4 w-4 shrink-0 md:hidden"
+                      className="h-4 w-4 shrink-0 lg:hidden"
                     />
                     <img
                       src={steeringWheelIcon}
                       alt=""
                       aria-hidden="true"
-                      className="hidden h-4 w-4 shrink-0 md:block"
+                      className="hidden h-4 w-4 shrink-0 lg:block"
                     />
                   </>
                 ) : (
@@ -239,18 +247,18 @@ const CarCard = ({
               </div>
             </div>
 
-            <p className="hidden text-[20px] font-bold leading-none text-[#272A37] md:block">
+            <p className="hidden text-[20px] font-bold leading-none text-[#272A37] lg:block">
               {formatPrice(price)} {currencySymbol}
             </p>
           </div>
 
-          <div className="mt-6 flex items-center justify-between text-xs font-normal text-[#6F7383] md:mt-8">
+          <div className="mt-6 flex items-center justify-between text-xs font-normal text-[#6F7383] lg:mt-8">
             <div className="flex items-center gap-1">
               {vipLabel && (
                 <Badge
                   text={vipLabel}
                   variant={getVipBadgeVariant(vipLabel)}
-                  className="hidden md:inline-block"
+                  className="hidden lg:inline-block"
                 />
               )}
 
@@ -258,7 +266,7 @@ const CarCard = ({
                 src={hotIcon}
                 alt=""
                 aria-hidden="true"
-                className="mr-1 h-3 w-[11px] shrink-0 md:hidden"
+                className="mr-1 h-3 w-[11px] shrink-0 lg:hidden"
               />
               <span>{formatNumber(views)} ნახვა</span>
               <span>•</span>
@@ -295,7 +303,7 @@ const CarCard = ({
               <button
                 type="button"
                 aria-label="Favorite"
-                className="hidden items-center md:flex"
+                className="hidden items-center lg:flex"
               >
                 <img
                   src={heartIcon}
