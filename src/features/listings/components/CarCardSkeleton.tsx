@@ -1,7 +1,7 @@
 const CarCardSkeleton = () => {
   return (
     <div className="overflow-hidden rounded-[14px] bg-white md:flex md:min-h-[164px]">
-      <div className="h-[210px] animate-pulse bg-slate-200 md:h-auto md:w-[182px] md:shrink-0" />
+      <div className="h-[238px] animate-pulse bg-slate-200 md:h-auto md:w-[182px] md:shrink-0" />
 
       <div className="flex flex-1 flex-col px-4 py-3">
         <div className="flex justify-between gap-4">

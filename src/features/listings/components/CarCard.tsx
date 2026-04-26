@@ -96,7 +96,7 @@ const CarCard = ({
           <img
             src={imageUrl}
             alt={`${title} ${year}`}
-            className="h-[210px] w-full object-cover md:h-36 md:rounded-[14px]"
+            className="h-[238px] w-full object-cover md:h-36 rounded-2xl md:rounded-lg"
           />
         </div>
 
