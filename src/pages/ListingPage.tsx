@@ -274,7 +274,7 @@ const ListingPage = () => {
             />
           </div>
 
-          <div className="w-full space-y-3">
+          <div className="w-full space-y-[10px]">
             <ListingToolbar
               totalCount={total}
               sortOrder={sortOrder}
@@ -290,7 +290,7 @@ const ListingPage = () => {
             />
 
             {isLoading && (
-              <div className="space-y-3">
+              <div className="space-y-[10px]">
                 {Array.from({ length: 6 }).map((_, index) => (
                   <CarCardSkeleton key={index} />
                 ))}
@@ -300,7 +300,7 @@ const ListingPage = () => {
             {error && <p className="text-[13px] text-[#FD4100]">{error}</p>}
 
             {!isLoading && !error && (
-              <div className="space-y-3">
+              <div className="space-y-[10px]">
                 {products.map((product) => {
                   const cardPrice = Math.round(
                     product.price_value * selectedCurrency.rate,
