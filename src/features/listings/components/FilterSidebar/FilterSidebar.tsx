@@ -54,18 +54,20 @@ const FilterSidebar = ({
   }));
 
   return (
-    <aside className="w-full overflow-hidden rounded-t-[12px] border border-[#E2E5EB] bg-white shadow-[0_4px_16px_rgba(164,174,193,0.10)] md:w-[250px]">
-      <VehicleTypeTabs
-        activeVehicleType={draft.vehicleType}
-        onChange={(vehicleType) =>
-          updateDraft({
-            vehicleType,
-            manufacturerIds: [],
-            modelIds: [],
-            categoryIds: [],
-          })
-        }
-      />
+    <aside className="w-full rounded-t-[12px] border border-[#E2E5EB] bg-white shadow-[0_4px_16px_rgba(164,174,193,0.10)] md:w-[250px]">
+      <div className="overflow-hidden rounded-t-[12px]">
+        <VehicleTypeTabs
+          activeVehicleType={draft.vehicleType}
+          onChange={(vehicleType) =>
+            updateDraft({
+              vehicleType,
+              manufacturerIds: [],
+              modelIds: [],
+              categoryIds: [],
+            })
+          }
+        />
+      </div>
 
       <div className="space-y-5 p-6 pt-[22px]">
         <FilterSelect
