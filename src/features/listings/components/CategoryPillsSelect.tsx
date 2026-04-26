@@ -52,14 +52,14 @@ const CategoryPillsSelect = ({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <span className="mb-2 block text-[13px] font-bold text-[#272A37]">
+      <span className="mb-2 block text-[12px] font-bold text-[#272A37] font-tbcx">
         კატეგორია
       </span>
 
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="flex h-[44px] w-full items-center justify-between rounded-[10px] border border-[#D8DBE2] bg-white px-4 text-left text-[13px] text-[#272A37]"
+        className="flex h-[44px] w-full items-center justify-between rounded-[10px] border border-[#D8DBE2] bg-white px-4 text-left text-[13px] font-tbcx text-[#272A37]"
       >
         <span className="truncate">
           {selectedLabels.length > 0

@@ -18,8 +18,8 @@ const PriceRangeFilter = ({
 }: PriceRangeFilterProps) => {
   return (
     <div className="border-t border-[#E9E9F0] px-6 pb-[44px] pt-[17px]">
-      <div className="mb-5 flex items-center justify-between">
-        <h3 className="text-[14px] font-bold leading-none text-[#272A37]">
+      <div className="mb-[13px] flex items-center justify-between">
+        <h3 className="text-[14px] font-medium leading-none text-[#272A37] font-helvetica-geo">
           ფასი
         </h3>
 
@@ -71,7 +71,7 @@ const PriceInput = ({ placeholder, value, onChange }: PriceInputProps) => {
 
         onChange(Math.max(0, Number(event.target.value)));
       }}
-      className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none placeholder:text-[#8C929B] focus:border-[#6F7383]"
+      className="h-[44px] min-w-0 rounded-[10px] border border-[#D8DBE2] px-4 text-[13px] text-[#272A37] outline-none font-helvetica-geo placeholder:text-[#8C929B] focus:border-[#6F7383]"
     />
   );
 };
