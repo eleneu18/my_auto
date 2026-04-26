@@ -58,7 +58,7 @@ const CurrencyButton = ({ label, icon, isActive }: CurrencyButtonProps) => {
       role="img"
       aria-label={label}
       className={cn(
-        "flex h-7 w-7 items-center justify-center rounded-full transition",
+        "flex h-6 w-6 items-center justify-center rounded-full transition",
         isActive ? "bg-[#272A37]" : "bg-white",
       )}
     >
@@ -67,8 +67,10 @@ const CurrencyButton = ({ label, icon, isActive }: CurrencyButtonProps) => {
         alt=""
         aria-hidden="true"
         className={cn(
-          "h-4 w-4 transition",
-          isActive ? "brightness-0 invert" : "opacity-55 grayscale",
+          "transition",
+          isActive
+            ? "h-[11px] w-[10px] brightness-0 invert"
+            : "h-[12px] w-[8px] opacity-55 grayscale",
         )}
       />
     </span>
