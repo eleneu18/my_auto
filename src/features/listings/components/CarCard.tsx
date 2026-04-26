@@ -8,6 +8,8 @@ import compareIcon from "../../../assets/images/compare-icon.svg";
 import clearIcon from "../../../assets/images/clear-icon.svg";
 import goodConditionIcon from "../../../assets/images/good-condition-icon.svg";
 import dangerIcon from "../../../assets/images/danger-icon.svg";
+import Badge from "../../../shared/ui/Badge";
+
 import {
   formatNumber,
   formatPrice,
@@ -46,13 +48,13 @@ const getStickerIcon = (icon: StickerTag["icon"]) => {
   return clearIcon;
 };
 
-const getVipBadgeClassName = (
+const getVipBadgeVariant = (
   vipLabel: NonNullable<CarCardProps["vipLabel"]>,
 ) => {
-  if (vipLabel === "S-VIP") return "bg-[#FD4100]";
-  if (vipLabel === "VIP+") return "bg-[#FDB022]";
+  if (vipLabel === "S-VIP") return "danger";
+  if (vipLabel === "VIP+") return "warning";
 
-  return "bg-[#3B6DFF]";
+  return "primary";
 };
 
 const CarCard = ({
@@ -176,14 +178,7 @@ const CarCard = ({
         <div className="mt-auto flex items-center justify-between pt-3 text-xs font-normal text-[#6F7383]">
           <div className="flex items-center gap-2">
             {vipLabel && (
-              <span
-                className={[
-                  "rounded-full px-2 py-1 font-tbcx text-[10px] font-bold uppercase leading-none text-white",
-                  getVipBadgeClassName(vipLabel),
-                ].join(" ")}
-              >
-                {vipLabel}
-              </span>
+              <Badge text={vipLabel} variant={getVipBadgeVariant(vipLabel)} />
             )}
 
             <span>{formatNumber(views)} ნახვა</span>
