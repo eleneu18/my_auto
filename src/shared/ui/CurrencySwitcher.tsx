@@ -60,7 +60,15 @@ const CurrencyButton = ({ label, icon, isActive }: CurrencyButtonProps) => {
         isActive ? "bg-[#272A37]" : "bg-white",
       ].join(" ")}
     >
-      <img src={icon} alt="" aria-hidden="true" className="h-4 w-4" />
+      <img
+        src={icon}
+        alt=""
+        aria-hidden="true"
+        className={[
+          "h-4 w-4 transition",
+          isActive ? "brightness-0 invert" : "opacity-55 grayscale",
+        ].join(" ")}
+      />
     </span>
   );
 };
