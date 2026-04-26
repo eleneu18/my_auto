@@ -112,3 +112,17 @@ export type Product = {
     priceTo?: number;
     currency: Currency;
   };
+
+
+export type CurrencyApiItem = {
+  currency_id: string;
+  currency_symbol: string;
+  currency_rate: string;
+  title: string;
+};
+
+export type CurrencyApiResponse = {
+  StatusCode: number;
+  StatusMessage: string;
+  Data: Record<string, CurrencyApiItem>;
+};

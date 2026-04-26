@@ -13,6 +13,7 @@ import { useProducts } from "../features/listings/hooks/useProducts";
 import { useManufacturers } from "../features/listings/hooks/useManufacturers";
 import { useModels } from "../features/listings/hooks/useModels";
 import { useCategories } from "../features/listings/hooks/useCategories";
+import { useCurrencies } from "../features/listings/hooks/useCurrencies";
 import { buildImageUrl } from "../features/listings/utils/buildImageUrl";
 import type {
   AppliedListingFilters,
@@ -26,6 +27,43 @@ const breadcrumbItems = [
   { label: "ავტო", href: "/ka" },
   { label: "მანქანები" },
 ];
+
+type StickerTag = {
+  label: string;
+  color: "red" | "green" | "blue";
+  icon: "danger" | "goodCondition" | "clear";
+};
+
+const getVipLabel = (paidAdd: number): "VIP" | "VIP+" | null => {
+  if (paidAdd === 1) return "VIP";
+  if (paidAdd >= 2) return "VIP+";
+
+  return null;
+};
+
+const getStickerTags = (stickers: number | null): StickerTag[] => {
+  if (!stickers) return [];
+
+  const tags: StickerTag[] = [];
+
+  if (stickers & 1) {
+    tags.push({ label: "სასწრაფოდ", color: "red", icon: "danger" });
+  }
+
+  if (stickers & 2) {
+    tags.push({
+      label: "იდეალურ მდგომარეობაში",
+      color: "green",
+      icon: "goodCondition",
+    });
+  }
+
+  if (stickers & 4) {
+    tags.push({ label: "სუფთა ისტორია", color: "blue", icon: "clear" });
+  }
+
+  return tags;
+};
 
 const ListingPage = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>(1);
@@ -45,6 +83,9 @@ const ListingPage = () => {
   const { data: manufacturers = [] } = useManufacturers();
   const { data: models = [] } = useModels(selectedManufacturerId);
   const { data: categories = [] } = useCategories();
+  const { getCurrency } = useCurrencies();
+
+  const selectedCurrency = getCurrency(currency);
 
   const manufacturerOptions = useMemo(
     () =>
@@ -76,13 +117,8 @@ const ListingPage = () => {
   const appliedFilterLabels = useMemo(() => {
     const labels: string[] = [];
 
-    if (filters.forRent === 0) {
-      labels.push("იყიდება");
-    }
-
-    if (filters.forRent === 1) {
-      labels.push("ქირავდება");
-    }
+    if (filters.forRent === 0) labels.push("იყიდება");
+    if (filters.forRent === 1) labels.push("ქირავდება");
 
     manufacturerOptions.forEach((manufacturer) => {
       if (filters.manufacturerIds.includes(manufacturer.id)) {
@@ -102,13 +138,9 @@ const ListingPage = () => {
       }
     });
 
-    if (filters.priceFrom !== undefined) {
+    if (filters.priceFrom !== undefined)
       labels.push(`დან ${filters.priceFrom}`);
-    }
-
-    if (filters.priceTo !== undefined) {
-      labels.push(`მდე ${filters.priceTo}`);
-    }
+    if (filters.priceTo !== undefined) labels.push(`მდე ${filters.priceTo}`);
 
     return labels;
   }, [categoryOptions, filters, manufacturerOptions, modelOptions]);
@@ -128,10 +160,7 @@ const ListingPage = () => {
       const category = categoryOptions.find((option) => option.label === label);
 
       if (label === "იყიდება" || label === "ქირავდება") {
-        return {
-          ...current,
-          forRent: undefined,
-        };
+        return { ...current, forRent: undefined };
       }
 
       if (manufacturer) {
@@ -159,17 +188,11 @@ const ListingPage = () => {
       }
 
       if (label === `დან ${current.priceFrom}`) {
-        return {
-          ...current,
-          priceFrom: undefined,
-        };
+        return { ...current, priceFrom: undefined };
       }
 
       if (label === `მდე ${current.priceTo}`) {
-        return {
-          ...current,
-          priceTo: undefined,
-        };
+        return { ...current, priceTo: undefined };
       }
 
       return current;
@@ -204,37 +227,6 @@ const ListingPage = () => {
     priceTo: filters.priceTo,
     page,
   });
-
-  const getVipLabel = (paidAdd: number) => {
-    if (paidAdd === 1) return "VIP";
-    if (paidAdd === 2) return "VIP+";
-    if (paidAdd >= 3) return "S-VIP";
-
-    return null;
-  };
-
-  const getStickerTags = (stickers: number | null) => {
-    if (!stickers) return [];
-
-    const tags = [];
-
-    if (stickers & 1) {
-      tags.push({ label: "სასწრაფოდ", variant: "danger" as const });
-    }
-
-    if (stickers & 2) {
-      tags.push({
-        label: "იდეალურ მდგომარეობაში",
-        variant: "success" as const,
-      });
-    }
-
-    if (stickers & 4) {
-      tags.push({ label: "სუფთა ისტორია", variant: "info" as const });
-    }
-
-    return tags;
-  };
 
   return (
     <div className="min-h-screen bg-[#f2f3f6]">
@@ -280,16 +272,16 @@ const ListingPage = () => {
             {!isLoading && !error && (
               <div className="space-y-3">
                 {products.map((product) => {
-                  const cardPrice =
-                    currency === "gel"
-                      ? product.price_value
-                      : product.price_usd;
+                  const cardPrice = Math.round(
+                    product.price_value * selectedCurrency.rate,
+                  );
 
                   const isGoodPrice =
-                    Boolean(product.has_predicted_price) &&
-                    product.pred_first_breakpoint !== undefined &&
-                    product.pred_first_breakpoint !== null &&
-                    cardPrice <= product.pred_first_breakpoint;
+                    product.prom_color === 1 ||
+                    (Boolean(product.has_predicted_price) &&
+                      product.pred_first_breakpoint !== undefined &&
+                      product.pred_first_breakpoint !== null &&
+                      product.price_value <= product.pred_first_breakpoint);
 
                   return (
                     <CarCard
@@ -298,7 +290,7 @@ const ListingPage = () => {
                       title={product.car_model || `მანქანა #${product.car_id}`}
                       year={product.prod_year}
                       price={cardPrice}
-                      currency={currency}
+                      currencySymbol={selectedCurrency.symbol}
                       mileageKm={product.car_run_km}
                       engine={`${product.engine_volume / 1000} ძრავი`}
                       transmission={`კოლოფი #${product.gear_type_id}`}
@@ -308,8 +300,8 @@ const ListingPage = () => {
                       views={product.views}
                       orderDate={product.order_date}
                       vipLabel={getVipLabel(product.paid_add)}
-                      tags={getStickerTags(product.stickers)}
-                      isGoodPrice={isGoodPrice || product.prom_color === 1}
+                      stickers={getStickerTags(product.stickers)}
+                      isGoodPrice={isGoodPrice}
                     />
                   );
                 })}

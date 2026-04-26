@@ -5,10 +5,14 @@ import steeringWheelIcon from "../../../assets/images/steering-wheel-icon.svg";
 import pencilIcon from "../../../assets/images/pencil-icon.svg";
 import heartIcon from "../../../assets/images/heart-icon.svg";
 import compareIcon from "../../../assets/images/compare-icon.svg";
+import clearIcon from "../../../assets/images/clear-icon.svg";
+import goodConditionIcon from "../../../assets/images/good-condition-icon.svg";
+import dangerIcon from "../../../assets/images/danger-icon.svg";
 
 type StickerTag = {
   label: string;
   color: "red" | "green" | "blue";
+  icon: "danger" | "goodCondition" | "clear";
 };
 
 type CarCardProps = {
@@ -16,11 +20,11 @@ type CarCardProps = {
   title: string;
   year: number;
   price: number;
+  currencySymbol: string;
   mileageKm: number;
   engine: string;
   transmission: string;
   customsPassed?: boolean;
-  currency: "gel" | "usd";
   isGoodPrice?: boolean;
   locationId: number;
   parentLocationId: number;
@@ -55,10 +59,17 @@ const formatRelativeDate = (date: string) => {
 };
 
 const getStickerClassName = (color: StickerTag["color"]) => {
-  if (color === "red") return "bg-[#FFF1F0] text-[#F04438]";
-  if (color === "green") return "bg-[#ECFDF3] text-[#12B76A]";
+  if (color === "red") return "text-[#F04438]";
+  if (color === "green") return "text-[#12B76A]";
 
-  return "bg-[#EFF8FF] text-[#2E90FA]";
+  return "text-[#2E90FA]";
+};
+
+const getStickerIcon = (icon: StickerTag["icon"]) => {
+  if (icon === "danger") return dangerIcon;
+  if (icon === "goodCondition") return goodConditionIcon;
+
+  return clearIcon;
 };
 
 const CarCard = ({
@@ -66,11 +77,11 @@ const CarCard = ({
   title,
   year,
   price,
+  currencySymbol,
   mileageKm,
   engine,
   transmission,
   customsPassed = false,
-  currency,
   isGoodPrice = false,
   locationId,
   parentLocationId,
@@ -118,7 +129,7 @@ const CarCard = ({
             </h3>
 
             <p className="mt-2 text-[20px] font-bold leading-none text-[#272A37] md:hidden">
-              {formatPrice(price)} {currency === "gel" ? "₾" : "$"}
+              {formatPrice(price)} {currencySymbol}
             </p>
           </div>
 
@@ -143,7 +154,7 @@ const CarCard = ({
             </div>
 
             <p className="mt-5 text-[20px] font-medium leading-none text-[#272A37]">
-              {formatPrice(price)} {currency === "gel" ? "₾" : "$"}
+              {formatPrice(price)} {currencySymbol}
             </p>
           </div>
         </div>
@@ -244,12 +255,15 @@ const CarCard = ({
             {stickers.map((sticker) => (
               <span
                 key={sticker.label}
-                className={[
-                  "rounded-full px-2 py-1 text-[11px] font-medium",
-                  getStickerClassName(sticker.color),
-                ].join(" ")}
+                className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 font-tbcx text-[12px] font-medium leading-[13px] text-[#454857]"
               >
-                {sticker.label}
+                <img
+                  src={getStickerIcon(sticker.icon)}
+                  alt=""
+                  aria-hidden="true"
+                  className="shrink-0"
+                />
+                <span>{sticker.label}</span>
               </span>
             ))}
           </div>
