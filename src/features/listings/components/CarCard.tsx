@@ -13,6 +13,7 @@ import dangerIcon from "../../../assets/images/danger-icon.svg";
 import checkMarkIcon from "../../../assets/images/check-mark-icon.svg";
 import flagGeorgiaIcon from "../../../assets/images/flag-georgia.svg";
 import Badge from "../../../shared/ui/Badge";
+import CustomsStatusBadge from "../../../shared/ui/CustomsStatusBadge";
 import { cn } from "../../../shared/utils/cn";
 
 import {
@@ -105,22 +106,7 @@ const CarCard = ({
             </h3>
           </div>
 
-          <div
-            className={cn(
-              "flex shrink-0 items-center gap-1 font-tbcx text-[11px] font-medium",
-              customsPassed ? "text-[#26B753]" : "text-[#FF3B30]",
-            )}
-          >
-            {customsPassed && (
-              <img
-                src={checkMarkIcon}
-                alt=""
-                aria-hidden="true"
-                className="h-[6px] w-[7px]"
-              />
-            )}
-            <span>{customsPassed ? "განბაჟებული" : "განბაჟება 2,176 ₾"}</span>
-          </div>
+          <CustomsStatusBadge passed={customsPassed} className="shrink-0" />
         </div>
 
         <p className="mb-3 text-[20px] font-bold leading-none text-[#272A37] md:hidden">
