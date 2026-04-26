@@ -10,6 +10,7 @@ import goodConditionIcon from "../../../assets/images/good-condition-icon.svg";
 import dangerIcon from "../../../assets/images/danger-icon.svg";
 import checkMarkIcon from "../../../assets/images/check-mark-icon.svg";
 import Badge from "../../../shared/ui/Badge";
+import flagGeorgiaIcon from "../../../assets/images/flag-georgia.svg";
 import { cn } from "../../../shared/utils/cn";
 
 import {
@@ -78,6 +79,8 @@ const CarCard = ({
   stickers = [],
 }: CarCardProps) => {
   const locationLabel = getLocationLabel(locationId, parentLocationId);
+  const shouldShowGeorgiaFlag =
+    locationLabel === "თბილისი" || locationLabel === "რუსთავის ავტო";
 
   return (
     <article
@@ -113,7 +116,7 @@ const CarCard = ({
             <div className="flex items-center gap-4">
               <div
                 className={cn(
-                  "flex items-center gap-1 text-[11px] font-medium",
+                  "flex items-center gap-1 text-[11px] font-medium font-tbcx",
                   customsPassed ? "text-[#26B753]" : "text-[#FF3B30]",
                 )}
               >
@@ -122,7 +125,7 @@ const CarCard = ({
                     src={checkMarkIcon}
                     alt=""
                     aria-hidden="true"
-                    className="h-3 w-3"
+                    className="w-[7px] h-[6px]"
                   />
                 )}
                 <span>
@@ -131,7 +134,14 @@ const CarCard = ({
               </div>
 
               <div className="flex items-center gap-1 text-[11px] font-medium text-[#6F7383]">
-                <span className="text-[#FD4100]">✚</span>
+                {shouldShowGeorgiaFlag && (
+                  <img
+                    src={flagGeorgiaIcon}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-4 w-4"
+                  />
+                )}{" "}
                 <span>{locationLabel}</span>
               </div>
             </div>
