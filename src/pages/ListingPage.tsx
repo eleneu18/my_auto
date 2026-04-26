@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Header from "../features/listings/components/Header";
 import Breadcrumb from "../features/listings/components/Breadcrumb";
 import CarCard from "../features/listings/components/CarCard";
-import FilterSidebar from "../features/listings/components/FilterSidebar";
+import FilterSidebar from "../features/listings/components/FilterSidebar/FilterSidebar";
 import ListingToolbar from "../features/listings/components/ListingToolbar";
 import CarCardSkeleton from "../features/listings/components/CarCardSkeleton";
 import Pagination from "../features/listings/components/Pagination";
