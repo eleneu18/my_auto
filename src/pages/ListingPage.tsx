@@ -30,38 +30,26 @@ const breadcrumbItems = [
 
 type StickerTag = {
   label: string;
-  color: "red" | "green" | "blue";
   icon: "danger" | "goodCondition" | "clear";
 };
-
-const getVipLabel = (paidAdd: number): "VIP" | "VIP+" | null => {
-  if (paidAdd === 1) return "VIP";
-  if (paidAdd >= 2) return "VIP+";
-
+const getVipLabel = (orderNumber: number): "S-VIP" | "VIP+" | "VIP" | null => {
+  if (orderNumber >= 20) return "S-VIP";
+  if (orderNumber >= 15) return "VIP+";
+  if (orderNumber >= 10) return "VIP";
   return null;
 };
-
 const getStickerTags = (stickers: number | null): StickerTag[] => {
   if (!stickers) return [];
-
   const tags: StickerTag[] = [];
-
   if (stickers & 1) {
-    tags.push({ label: "სასწრაფოდ", color: "red", icon: "danger" });
+    tags.push({ label: "სასწრაფოდ", icon: "danger" });
   }
-
   if (stickers & 2) {
-    tags.push({
-      label: "იდეალურ მდგომარეობაში",
-      color: "green",
-      icon: "goodCondition",
-    });
+    tags.push({ label: "იდეალურ მდგომარეობაში", icon: "goodCondition" });
   }
-
   if (stickers & 4) {
-    tags.push({ label: "სუფთა ისტორია", color: "blue", icon: "clear" });
+    tags.push({ label: "სუფთა ისტორია", icon: "clear" });
   }
-
   return tags;
 };
 
@@ -282,7 +270,6 @@ const ListingPage = () => {
                       product.pred_first_breakpoint !== undefined &&
                       product.pred_first_breakpoint !== null &&
                       product.price_value <= product.pred_first_breakpoint);
-
                   return (
                     <CarCard
                       key={product.car_id}
@@ -299,7 +286,7 @@ const ListingPage = () => {
                       parentLocationId={product.parent_loc_id}
                       views={product.views}
                       orderDate={product.order_date}
-                      vipLabel={getVipLabel(product.paid_add)}
+                      vipLabel={getVipLabel(product.order_number)}
                       stickers={getStickerTags(product.stickers)}
                       isGoodPrice={isGoodPrice}
                     />

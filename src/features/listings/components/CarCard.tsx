@@ -11,7 +11,6 @@ import dangerIcon from "../../../assets/images/danger-icon.svg";
 
 type StickerTag = {
   label: string;
-  color: "red" | "green" | "blue";
   icon: "danger" | "goodCondition" | "clear";
 };
 
@@ -30,7 +29,7 @@ type CarCardProps = {
   parentLocationId: number;
   views: number;
   orderDate: string;
-  vipLabel?: "VIP" | "VIP+" | null;
+  vipLabel?: "S-VIP" | "VIP+" | "VIP" | null;
   stickers?: StickerTag[];
 };
 
@@ -56,13 +55,6 @@ const formatRelativeDate = (date: string) => {
   if (diffDays === 1) return "1 დღის წინ";
 
   return `${diffDays} დღის წინ`;
-};
-
-const getStickerClassName = (color: StickerTag["color"]) => {
-  if (color === "red") return "text-[#F04438]";
-  if (color === "green") return "text-[#12B76A]";
-
-  return "text-[#2E90FA]";
 };
 
 const getStickerIcon = (icon: StickerTag["icon"]) => {
@@ -112,7 +104,11 @@ const CarCard = ({
           <span
             className={[
               "absolute bottom-3 left-3 rounded-full px-2 py-1 text-[10px] font-bold uppercase leading-none text-white",
-              vipLabel === "VIP+" ? "bg-[#FDB022]" : "bg-[#3B6DFF]",
+              vipLabel === "S-VIP"
+                ? "bg-[#FD4100]"
+                : vipLabel === "VIP+"
+                  ? "bg-[#FDB022]"
+                  : "bg-[#3B6DFF]",
             ].join(" ")}
           >
             {vipLabel}
