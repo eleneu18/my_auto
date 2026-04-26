@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+import { cn } from "../../../../shared/utils/cn";
 import arrowRight from "../../../../assets/images/arrow-icon.svg";
 
 type FilterSelectOption = {
@@ -58,10 +58,10 @@ const FilterSelect = ({
           src={arrowRight}
           alt=""
           aria-hidden="true"
-          className={[
+          className={cn(
             "transition-transform",
             isOpen ? "-rotate-90" : "rotate-90",
-          ].join(" ")}
+          )}
         />
       </button>
 

@@ -1,3 +1,5 @@
+import { cn } from "../utils/cn";
+
 type BadgeVariant = "primary" | "warning" | "danger";
 
 type BadgeProps = {
@@ -15,11 +17,11 @@ const variantClassNames: Record<BadgeVariant, string> = {
 const Badge = ({ text, variant = "primary", className = "" }: BadgeProps) => {
   return (
     <span
-      className={[
+      className={cn(
         "rounded-full px-2 py-1 font-tbcx text-[10px] font-bold uppercase leading-none text-white",
         variantClassNames[variant],
         className,
-      ].join(" ")}
+      )}
     >
       {text}
     </span>

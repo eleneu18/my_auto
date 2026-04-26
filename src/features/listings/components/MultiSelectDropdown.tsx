@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import arrowRight from "../../../assets/images/arrow-icon.svg";
 import Button from "../../../shared/ui/Button";
+import { cn } from "../../../shared/utils/cn";
 
 type MultiSelectOption = {
   id: number;
@@ -77,12 +78,12 @@ const MultiSelectDropdown = ({
         type="button"
         disabled={disabled}
         onClick={() => setIsOpen((current) => !current)}
-        className={[
+        className={cn(
           "flex min-h-[44px] w-full items-center justify-between rounded-[10px] border px-3 py-2 text-left text-[13px] transition",
           disabled
             ? "cursor-not-allowed border-[#E1E3E8] bg-[#F4F5F7] text-[#A0A4AD]"
             : "border-[#D8DBE2] bg-white text-[#272A37]",
-        ].join(" ")}
+        )}
       >
         <span className="min-w-0 flex-1 truncate">
           {selectedOptions.length > 0
@@ -106,10 +107,10 @@ const MultiSelectDropdown = ({
               src={arrowRight}
               alt=""
               aria-hidden="true"
-              className={[
+              className={cn(
                 "ml-2 shrink-0 transition-transform",
                 isOpen ? "-rotate-90" : "rotate-90",
-              ].join(" ")}
+              )}
             />
           </span>
         )}
@@ -130,12 +131,12 @@ const MultiSelectDropdown = ({
                     className="flex w-full items-center gap-3 text-left text-[13px] text-[#454857]"
                   >
                     <span
-                      className={[
+                      className={cn(
                         "flex h-5 w-5 items-center justify-center rounded border",
                         isSelected
                           ? "border-[#26B753] bg-[#26B753] text-white"
                           : "border-[#D8DBE2] bg-white",
-                      ].join(" ")}
+                      )}
                     >
                       {isSelected ? "✓" : ""}
                     </span>

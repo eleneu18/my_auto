@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { cn } from "../utils/cn";
 
 type ButtonVariant = "primary" | "secondary";
 
@@ -24,11 +25,11 @@ const Button = ({
   return (
     <button
       type={type}
-      className={[
+      className={cn(
         "w-full disabled:cursor-not-allowed disabled:opacity-60",
         variantClassNames[variant],
         className,
-      ].join(" ")}
+      )}
       {...props}
     >
       {children}

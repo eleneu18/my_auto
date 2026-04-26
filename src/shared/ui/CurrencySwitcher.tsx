@@ -1,3 +1,5 @@
+import { cn } from "../utils/cn";
+
 type CurrencySwitcherProps = {
   value: "gel" | "usd";
   onChange: (value: "gel" | "usd") => void;
@@ -55,19 +57,19 @@ const CurrencyButton = ({ label, icon, isActive }: CurrencyButtonProps) => {
     <span
       role="img"
       aria-label={label}
-      className={[
+      className={cn(
         "flex h-7 w-7 items-center justify-center rounded-full transition",
         isActive ? "bg-[#272A37]" : "bg-white",
-      ].join(" ")}
+      )}
     >
       <img
         src={icon}
         alt=""
         aria-hidden="true"
-        className={[
+        className={cn(
           "h-4 w-4 transition",
           isActive ? "brightness-0 invert" : "opacity-55 grayscale",
-        ].join(" ")}
+        )}
       />
     </span>
   );

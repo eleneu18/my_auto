@@ -1,6 +1,7 @@
 import carIcon from "../../../../assets/images/car-icon.svg";
 import motoIcon from "../../../../assets/images/moto-icon.svg";
 import tractorIcon from "../../../../assets/images/tractor-icon.svg";
+import { cn } from "../../../../shared/utils/cn";
 
 export type VehicleType = "car" | "tractor" | "moto";
 
@@ -36,21 +37,21 @@ const VehicleTypeTabs = ({
             type="button"
             aria-label={item.label}
             onClick={() => onChange(item.value)}
-            className={[
-              "flex items-center justify-center border-r border-[#E9EBF0] cursor-pointer transition last:border-r-0",
+            className={cn(
+              "flex cursor-pointer items-center justify-center border-r border-[#E9EBF0] transition last:border-r-0",
               isActive
                 ? "border-b-1 border-b-[#FD4100] bg-white"
                 : "bg-[#F9F9FB]",
-            ].join(" ")}
+            )}
           >
             <img
               src={item.icon}
               alt=""
               aria-hidden="true"
-              className={[
+              className={cn(
                 "h-6 w-6 transition",
                 isActive ? "opacity-100" : "opacity-55 grayscale",
-              ].join(" ")}
+              )}
             />
           </button>
         );

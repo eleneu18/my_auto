@@ -9,6 +9,7 @@ import clearIcon from "../../../assets/images/clear-icon.svg";
 import goodConditionIcon from "../../../assets/images/good-condition-icon.svg";
 import dangerIcon from "../../../assets/images/danger-icon.svg";
 import Badge from "../../../shared/ui/Badge";
+import { cn } from "../../../shared/utils/cn";
 
 import {
   formatNumber,
@@ -79,12 +80,12 @@ const CarCard = ({
 
   return (
     <article
-      className={[
+      className={cn(
         "overflow-hidden rounded-[14px] border transition hover:shadow-sm md:flex md:min-h-[164px]",
         isGoodPrice
           ? "border-[#59D8C9] bg-[#F0F9F7]"
           : "border-transparent bg-white hover:border-[#BFDAD6]",
-      ].join(" ")}
+      )}
     >
       <div className="relative md:w-[182px] md:shrink-0">
         <img
@@ -110,10 +111,10 @@ const CarCard = ({
           <div className="hidden flex-col items-end md:flex">
             <div className="flex items-center gap-5">
               <div
-                className={[
+                className={cn(
                   "flex items-center gap-1 text-[11px] font-medium",
                   customsPassed ? "text-[#26B753]" : "text-[#FF3B30]",
-                ].join(" ")}
+                )}
               >
                 <span>{customsPassed ? "✓" : "!"}</span>
                 <span>

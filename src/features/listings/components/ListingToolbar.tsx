@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Period, SortOrder } from "../types";
+import { cn } from "../../../shared/utils/cn";
 
 import arrowRight from "../../../assets/images/arrow-icon.svg";
 
@@ -118,19 +119,19 @@ const ToolbarSelect = <T extends string | number>({
           src={arrowRight}
           alt=""
           aria-hidden="true"
-          className={[
+          className={cn(
             "transition-transform",
             isOpen ? "-rotate-90" : "rotate-90",
-          ].join(" ")}
-        />{" "}
+          )}
+        />
       </button>
 
       {isOpen && (
         <div
-          className={[
+          className={cn(
             "absolute top-[48px] z-20 w-[180px] overflow-hidden rounded-[10px] border border-[#D4D4E0] bg-white py-2 shadow-[0_10px_30px_0_rgba(44,46,85,0.13)]",
             align === "right" ? "right-0" : "left-0",
-          ].join(" ")}
+          )}
         >
           {options.map((option) => (
             <button

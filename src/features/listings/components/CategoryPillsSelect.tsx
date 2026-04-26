@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import arrowRight from "../../../assets/images/arrow-icon.svg";
 import Button from "../../../shared/ui/Button";
+import { cn } from "../../../shared/utils/cn";
 
 type CategoryOption = {
   id: number;
@@ -69,11 +70,11 @@ const CategoryPillsSelect = ({
           src={arrowRight}
           alt=""
           aria-hidden="true"
-          className={[
+          className={cn(
             "shrink-0 transition-transform",
             isOpen ? "-rotate-90" : "rotate-90",
-          ].join(" ")}
-        />{" "}
+          )}
+        />
       </button>
 
       {isOpen && (
@@ -87,12 +88,12 @@ const CategoryPillsSelect = ({
                     key={option.id}
                     type="button"
                     onClick={() => toggle(option.id)}
-                    className={[
+                    className={cn(
                       "rounded-[8px] border px-3 py-2 text-[12px] font-medium",
                       isSelected
                         ? "border-[#26B753] bg-[#F0FFF7] text-[#159947]"
                         : "border-[#E9EBF0] bg-white text-[#6F7383]",
-                    ].join(" ")}
+                    )}
                   >
                     {isSelected ? "✓ " : "+ "}
                     {option.label}
