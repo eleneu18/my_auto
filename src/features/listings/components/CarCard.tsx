@@ -71,7 +71,7 @@ const CarCard = ({
       <div className="flex min-w-0 flex-1 flex-col px-4 py-3">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="truncate text-[13px] font-medium leading-[18px] text-[#272A37]">
+            <h3 className="truncate text-sm font-medium text-[#272A37]">
               {title}
               <span className="ml-2 text-[#8C929B]">{year} წ</span>
             </h3>
@@ -87,7 +87,7 @@ const CarCard = ({
                 განბაჟებული
               </p>
             ) : (
-              <p className="mb-2 text-[11px] font-medium text-[#FD4100]">
+              <p className="mb-2 text-[11px] font-medium text-[#FF3B30]">
                 განბაჟება 2,176 ₾
               </p>
             )}
@@ -98,7 +98,7 @@ const CarCard = ({
           </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-[12px] leading-[17px] text-[#454857] md:max-w-[330px]">
+        <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-xs font-medium text-[#1B1D25]">
           <div className="flex items-center gap-2">
             <img
               src={engineIcon}
@@ -140,7 +140,7 @@ const CarCard = ({
           </div>
         </div>
 
-        <div className="mt-auto flex items-center justify-between border-t border-[#EEF0F3] pt-3 text-[11px] text-[#8C929B]">
+        <div className="mt-auto flex items-center justify-between border-t border-[#EEF0F3] pt-3 text-xs font-normal text-[#6F7383]">
           <div className="flex items-center gap-2">
             <span className="h-4 w-4 rounded-full bg-[#E9EBF0]" />
             <span>589 ნახვა</span>
