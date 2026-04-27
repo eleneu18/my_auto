@@ -11,13 +11,32 @@ import { useModels } from "../../hooks/useModels";
 import type { AppliedListingFilters } from "../../types";
 import FilterSelect from "./FilterSelect";
 import PriceRangeFilter from "./PriceRangeFilter";
-import VehicleTypeTabs from "./VehicleTypeTabs";
+import VehicleTypeTabs, { type VehicleType } from "./VehicleTypeTabs";
 
 type FilterSidebarProps = {
   initialFilters: AppliedListingFilters;
   totalCount: number;
   onApply: (filters: AppliedListingFilters) => void;
 };
+
+type VehicleTypeBucket = Pick<
+  AppliedListingFilters,
+  "manufacturerIds" | "modelIds" | "categoryIds"
+>;
+
+const emptyBucket: VehicleTypeBucket = {
+  manufacturerIds: [],
+  modelIds: [],
+  categoryIds: [],
+};
+
+const bucketFromFilters = (
+  filters: AppliedListingFilters,
+): VehicleTypeBucket => ({
+  manufacturerIds: filters.manufacturerIds,
+  modelIds: filters.modelIds,
+  categoryIds: filters.categoryIds,
+});
 
 const FilterSidebar = ({
   initialFilters,
@@ -26,9 +45,43 @@ const FilterSidebar = ({
 }: FilterSidebarProps) => {
   const [draft, setDraft] = useState<AppliedListingFilters>(initialFilters);
 
+  const [bucketsByType, setBucketsByType] = useState<
+    Record<VehicleType, VehicleTypeBucket>
+  >(() => ({
+    car: emptyBucket,
+    tractor: emptyBucket,
+    moto: emptyBucket,
+    [initialFilters.vehicleType]: bucketFromFilters(initialFilters),
+  }));
+
   useEffect(() => {
     setDraft(initialFilters);
+    setBucketsByType((prev) => ({
+      ...prev,
+      [initialFilters.vehicleType]: bucketFromFilters(initialFilters),
+    }));
   }, [initialFilters]);
+
+  const handleVehicleTypeChange = (nextType: VehicleType) => {
+    if (nextType === draft.vehicleType) {
+      return;
+    }
+
+    const nextBuckets: Record<VehicleType, VehicleTypeBucket> = {
+      ...bucketsByType,
+      [draft.vehicleType]: bucketFromFilters(draft),
+    };
+    setBucketsByType(nextBuckets);
+
+    const restored = nextBuckets[nextType] ?? emptyBucket;
+    setDraft((current) => ({
+      ...current,
+      vehicleType: nextType,
+      manufacturerIds: restored.manufacturerIds,
+      modelIds: restored.modelIds,
+      categoryIds: restored.categoryIds,
+    }));
+  };
 
   const { data: manufacturers = [] } = useManufacturers();
   const { models, modelsByManufacturer } = useModels(draft.manufacturerIds);
@@ -82,14 +135,7 @@ const FilterSidebar = ({
       <div className="overflow-hidden rounded-t-[12px]">
         <VehicleTypeTabs
           activeVehicleType={draft.vehicleType}
-          onChange={(vehicleType) =>
-            updateDraft({
-              vehicleType,
-              manufacturerIds: [],
-              modelIds: [],
-              categoryIds: [],
-            })
-          }
+          onChange={handleVehicleTypeChange}
         />
       </div>
 
