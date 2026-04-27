@@ -7,48 +7,25 @@ type AppliedFiltersBarProps = {
   onOpenFilters: () => void;
 };
 
-const filterTriggerClassName =
-  "flex shrink-0 items-center gap-2 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37]";
-
-const FilterTriggerContent = () => (
-  <>
-    <img
-      src={filterIcon}
-      alt=""
-      aria-hidden="true"
-      className="h-[14px] w-[14px] shrink-0"
-    />
-    <span>ფილტრი</span>
-  </>
-);
-
 const AppliedFiltersBar = ({
   labels,
   onClearOne,
   onOpenFilters,
 }: AppliedFiltersBarProps) => {
-  if (labels.length === 0) {
-    return (
-      <div className="scrollbar-hidden mb-4 flex gap-2 overflow-x-auto md:hidden">
-        <button
-          type="button"
-          onClick={onOpenFilters}
-          className={filterTriggerClassName}
-        >
-          <FilterTriggerContent />
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="scrollbar-hidden mb-4 flex gap-2 overflow-x-auto">
+    <div className="scrollbar-hidden mb-4 flex gap-2 overflow-x-auto md:hidden">
       <button
         type="button"
         onClick={onOpenFilters}
-        className={`${filterTriggerClassName} md:hidden`}
+        className="flex shrink-0 items-center gap-2 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37]"
       >
-        <FilterTriggerContent />
+        <img
+          src={filterIcon}
+          alt=""
+          aria-hidden="true"
+          className="h-[14px] w-[14px] shrink-0"
+        />
+        <span>ფილტრი</span>
       </button>
 
       {labels.map((label) => (
