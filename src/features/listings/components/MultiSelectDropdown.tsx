@@ -95,10 +95,12 @@ const MultiSelectDropdown = ({
         disabled={disabled}
         onClick={() => setIsOpen((current) => !current)}
         className={cn(
-          "flex min-h-[44px] w-full items-center justify-between rounded-[10px] border px-3 py-2 text-left text-[13px] font-tbcx transition",
+          "flex min-h-[44px] w-full items-center justify-between rounded-[10px] border px-3 py-2 text-left text-[13px] font-tbcx transition-colors",
           disabled
             ? "cursor-not-allowed border-[#E1E3E8] bg-[#F4F5F7] text-[#A0A4AD]"
-            : "border-[#D8DBE2] bg-white text-[#272A37]",
+            : selectedOptions.length > 0
+              ? "border-[#C2C9D8] bg-white text-[#1B1D25] hover:border-[#C2C9D8]"
+              : "border-[#D8DBE2] bg-white text-[#6F7383] hover:border-[#C2C9D8] hover:text-[#1B1D25]",
         )}
       >
         <span className="min-w-0 flex-1 truncate">

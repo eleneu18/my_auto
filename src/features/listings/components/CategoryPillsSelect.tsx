@@ -59,7 +59,12 @@ const CategoryPillsSelect = ({
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="flex h-[44px] w-full items-center justify-between rounded-[10px] border border-[#D8DBE2] bg-white px-4 text-left text-[13px] font-tbcx text-[#272A37]"
+        className={cn(
+          "flex h-[44px] w-full items-center justify-between rounded-[10px] border bg-white px-4 text-left text-[13px] font-tbcx transition-colors",
+          selectedLabels.length > 0
+            ? "border-[#C2C9D8] text-[#1B1D25] hover:border-[#C2C9D8]"
+            : "border-[#D8DBE2] text-[#6F7383] hover:border-[#C2C9D8] hover:text-[#1B1D25]",
+        )}
       >
         <span className="truncate">
           {selectedLabels.length > 0

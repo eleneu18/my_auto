@@ -51,7 +51,12 @@ const FilterSelect = ({
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}
-        className="flex h-[44px] w-full items-center justify-between rounded-[10px] border border-[#D8DBE2] bg-white px-4 font-tbcx text-[13px] font-medium text-[#272A37]"
+        className={cn(
+          "flex h-[44px] w-full items-center justify-between rounded-[10px] border bg-white px-4 font-tbcx text-[13px] font-medium transition-colors",
+          value
+            ? "border-[#C2C9D8] text-[#1B1D25] hover:border-[#C2C9D8]"
+            : "border-[#D8DBE2] text-[#6F7383] hover:border-[#C2C9D8] hover:text-[#1B1D25]",
+        )}
       >
         <span>{selectedOption.label}</span>
         <img

@@ -46,3 +46,11 @@ body {
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href],
+label[for],
+summary {
+  cursor: pointer;
+}
