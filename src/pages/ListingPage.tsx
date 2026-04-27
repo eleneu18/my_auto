@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
-
 import Header from "../features/listings/components/Header";
 import Breadcrumb from "../shared/ui/Breadcrumb";
 import CarCard from "../features/listings/components/CarCard";
@@ -9,249 +7,35 @@ import CarCardSkeleton from "../features/listings/components/CarCardSkeleton";
 import Pagination from "../features/listings/components/Pagination";
 import AppliedFiltersBar from "../features/listings/components/AppliedFiltersBar";
 
-import { useProducts } from "../features/listings/hooks/useProducts";
-import { useManufacturers } from "../features/listings/hooks/useManufacturers";
-import { useModels } from "../features/listings/hooks/useModels";
-import { useCategories } from "../features/listings/hooks/useCategories";
-import { useCurrencies } from "../features/listings/hooks/useCurrencies";
+import { useListingPageState } from "../features/listings/hooks/useListingPageState";
 import { buildImageUrl } from "../features/listings/utils/buildImageUrl";
 import { formatCustomsFee } from "../features/listings/utils/carCardFormatters";
 import {
-  buildUrlParamsFromFilters,
-  parseFiltersFromUrl,
-} from "../features/listings/utils/listingUrlFilters";
-import type {
-  AppliedListingFilters,
-  Currency,
-  Period,
-  SortOrder,
-} from "../features/listings/types";
-
-type StickerTag = {
-  label: string;
-  icon: "danger" | "goodCondition" | "clear";
-};
-
-const getVipLabel = (orderNumber: number): "S-VIP" | "VIP+" | "VIP" | null => {
-  if (orderNumber >= 20) return "S-VIP";
-  if (orderNumber >= 15) return "VIP+";
-  if (orderNumber >= 10) return "VIP";
-
-  return null;
-};
-
-const getStickerTags = (stickers: number | null): StickerTag[] => {
-  if (!stickers) return [];
-
-  const tags: StickerTag[] = [];
-
-  if (stickers & 1) {
-    tags.push({ label: "სასწრაფოდ", icon: "danger" });
-  }
-
-  if (stickers & 2) {
-    tags.push({ label: "იდეალურ მდგომარეობაში", icon: "goodCondition" });
-  }
-
-  if (stickers & 4) {
-    tags.push({ label: "სუფთა ისტორია", icon: "clear" });
-  }
-
-  return tags;
-};
+  getStickerTags,
+  getVipLabel,
+} from "../features/listings/utils/listingDisplay";
 
 const ListingPage = () => {
-  const initialUrlState = useMemo(() => parseFiltersFromUrl(), []);
-
-  const [sortOrder, setSortOrder] = useState<SortOrder>(
-    initialUrlState.sortOrder,
-  );
-  const [period, setPeriod] = useState<Period>(initialUrlState.period);
-  const [page, setPage] = useState(initialUrlState.page);
-  const [currency, setCurrency] = useState<Currency>(
-    initialUrlState.filters.currency,
-  );
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState<AppliedListingFilters>(
-    initialUrlState.filters,
-  );
-
-  useEffect(() => {
-    const params = buildUrlParamsFromFilters(filters, page, period, sortOrder);
-    const nextUrl = `${window.location.pathname}?${params.toString()}`;
-
-    window.history.replaceState(null, "", nextUrl);
-  }, [filters, page, period, sortOrder]);
-
-  const { data: manufacturers = [] } = useManufacturers();
-  const { models, modelsByManufacturer } = useModels(filters.manufacturerIds);
-  const { data: categories = [] } = useCategories();
-  const { getCurrency } = useCurrencies();
-
-  const selectedCurrency = getCurrency(currency);
-
-  const manufacturerOptions = useMemo(
-    () =>
-      manufacturers.map((manufacturer) => ({
-        id: Number(manufacturer.man_id),
-        label: manufacturer.man_name,
-      })),
-    [manufacturers],
-  );
-
-  const modelOptions = useMemo(
-    () =>
-      models.map((model) => ({
-        id: model.model_id,
-        label: model.model_name,
-      })),
-    [models],
-  );
-
-  const categoryOptions = useMemo(
-    () =>
-      categories.map((category) => ({
-        id: category.category_id,
-        label: category.title,
-      })),
-    [categories],
-  );
-
-  const breadcrumbItems = useMemo(() => {
-    const lastLabel =
-      filters.forRent === 0
-        ? "იყიდება"
-        : filters.forRent === 1
-          ? "ქირავდება"
-          : "მანქანები";
-
-    return [
-      { label: "მთავარი", href: "/" },
-      { label: "ავტო", href: "/ka" },
-      { label: lastLabel },
-    ];
-  }, [filters.forRent]);
-
-  const appliedFilterLabels = useMemo(() => {
-    const labels: string[] = [];
-
-    if (filters.forRent === 0) labels.push("იყიდება");
-    if (filters.forRent === 1) labels.push("ქირავდება");
-
-    manufacturerOptions.forEach((manufacturer) => {
-      if (filters.manufacturerIds.includes(manufacturer.id)) {
-        labels.push(manufacturer.label);
-      }
-    });
-
-    modelOptions.forEach((model) => {
-      if (filters.modelIds.includes(model.id)) {
-        labels.push(model.label);
-      }
-    });
-
-    categoryOptions.forEach((category) => {
-      if (filters.categoryIds.includes(category.id)) {
-        labels.push(category.label);
-      }
-    });
-
-    if (filters.priceFrom !== undefined) {
-      labels.push(`დან ${filters.priceFrom}`);
-    }
-
-    if (filters.priceTo !== undefined) {
-      labels.push(`მდე ${filters.priceTo}`);
-    }
-
-    return labels;
-  }, [categoryOptions, filters, manufacturerOptions, modelOptions]);
-
-  const applyFilters = (nextFilters: AppliedListingFilters) => {
-    setFilters(nextFilters);
-    setCurrency(nextFilters.currency);
-    setPage(1);
-  };
-
-  const clearAppliedFilter = (label: string) => {
-    setFilters((current) => {
-      const manufacturer = manufacturerOptions.find(
-        (option) => option.label === label,
-      );
-      const model = modelOptions.find((option) => option.label === label);
-      const category = categoryOptions.find((option) => option.label === label);
-
-      if (label === "იყიდება" || label === "ქირავდება") {
-        return { ...current, forRent: undefined };
-      }
-
-      if (manufacturer) {
-        return {
-          ...current,
-          manufacturerIds: current.manufacturerIds.filter(
-            (id) => id !== manufacturer.id,
-          ),
-          modelIds: [],
-        };
-      }
-
-      if (model) {
-        return {
-          ...current,
-          modelIds: current.modelIds.filter((id) => id !== model.id),
-        };
-      }
-
-      if (category) {
-        return {
-          ...current,
-          categoryIds: current.categoryIds.filter((id) => id !== category.id),
-        };
-      }
-
-      if (label === `დან ${current.priceFrom}`) {
-        return { ...current, priceFrom: undefined };
-      }
-
-      if (label === `მდე ${current.priceTo}`) {
-        return { ...current, priceTo: undefined };
-      }
-
-      return current;
-    });
-
-    setPage(1);
-  };
-
-  const mans =
-    filters.manufacturerIds.length > 0
-      ? filters.manufacturerIds
-          .map((manId) => {
-            const modelsForThisMan = (modelsByManufacturer.get(manId) ?? [])
-              .filter((model) => filters.modelIds.includes(model.model_id))
-              .map((model) => model.model_id);
-
-            return modelsForThisMan.length > 0
-              ? `${manId}.${modelsForThisMan.join(".")}`
-              : String(manId);
-          })
-          .join("-")
-      : undefined;
-
-  const cats =
-    filters.categoryIds.length > 0 ? filters.categoryIds.join(".") : undefined;
-
-  const { products, total, meta, isLoading, error } = useProducts({
-    vehicleType: filters.vehicleType,
-    sortOrder,
+  const {
+    filters,
     period,
-    forRent: filters.forRent,
-    mans,
-    cats,
-    priceFrom: filters.priceFrom,
-    priceTo: filters.priceTo,
-    page,
-  });
+    sortOrder,
+    selectedCurrency,
+    isFilterOpen,
+    setIsFilterOpen,
+    products,
+    total,
+    meta,
+    isLoading,
+    error,
+    breadcrumbItems,
+    appliedFilterLabels,
+    applyFilters,
+    clearAppliedFilter,
+    handleSortChange,
+    handlePeriodChange,
+    setPage,
+  } = useListingPageState();
 
   return (
     <div className="min-h-screen bg-[#f2f3f6]">
@@ -280,14 +64,8 @@ const ListingPage = () => {
               totalCount={total}
               sortOrder={sortOrder}
               period={period}
-              onSortChange={(nextSortOrder) => {
-                setSortOrder(nextSortOrder);
-                setPage(1);
-              }}
-              onPeriodChange={(nextPeriod) => {
-                setPeriod(nextPeriod);
-                setPage(1);
-              }}
+              onSortChange={handleSortChange}
+              onPeriodChange={handlePeriodChange}
             />
 
             {isLoading && (
