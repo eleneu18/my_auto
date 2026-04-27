@@ -1,3 +1,4 @@
+import filterIcon from "../../../assets/images/filter-icon.svg";
 import removeRoundedIcon from "../../../assets/images/remove-rounded.svg";
 
 type AppliedFiltersBarProps = {
@@ -5,6 +6,21 @@ type AppliedFiltersBarProps = {
   onClearOne: (label: string) => void;
   onOpenFilters: () => void;
 };
+
+const filterTriggerClassName =
+  "flex shrink-0 items-center gap-2 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37]";
+
+const FilterTriggerContent = () => (
+  <>
+    <img
+      src={filterIcon}
+      alt=""
+      aria-hidden="true"
+      className="h-[14px] w-[14px] shrink-0"
+    />
+    <span>ფილტრი</span>
+  </>
+);
 
 const AppliedFiltersBar = ({
   labels,
@@ -17,9 +33,9 @@ const AppliedFiltersBar = ({
         <button
           type="button"
           onClick={onOpenFilters}
-          className="shrink-0 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37]"
+          className={filterTriggerClassName}
         >
-          ფილტრი
+          <FilterTriggerContent />
         </button>
       </div>
     );
@@ -30,9 +46,9 @@ const AppliedFiltersBar = ({
       <button
         type="button"
         onClick={onOpenFilters}
-        className="shrink-0 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37] md:hidden"
+        className={`${filterTriggerClassName} md:hidden`}
       >
-        ფილტრი
+        <FilterTriggerContent />
       </button>
 
       {labels.map((label) => (
