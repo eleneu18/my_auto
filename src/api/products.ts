@@ -1,13 +1,12 @@
 import type { ProductFilters, ProductsResponse } from "../features/listings/types";
 import { buildSearchParams } from "../features/listings/utils/buildSearchParams";
-
-const PRODUCTS_URL = "https://api2.myauto.ge/ka/products";
+import { endpoints } from "../shared/api/endpoints";
 
 export const getProducts = async (
   filters: ProductFilters = {},
 ): Promise<ProductsResponse["data"]> => {
   const params = buildSearchParams(filters);
-  const url = `${PRODUCTS_URL}?${params.toString()}`;
+  const url = `${endpoints.products}?${params.toString()}`;
 
   const response = await fetch(url);
 

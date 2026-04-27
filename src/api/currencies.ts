@@ -1,9 +1,8 @@
 import type { CurrencyApiResponse } from "../features/listings/types";
-
-const CURRENCIES_URL = "https://api2.myauto.ge/ka/currency";
+import { endpoints } from "../shared/api/endpoints";
 
 export const getCurrencies = async () => {
-  const response = await fetch(CURRENCIES_URL);
+  const response = await fetch(endpoints.currencies);
 
   if (!response.ok) {
     throw new Error("Failed to fetch currencies");

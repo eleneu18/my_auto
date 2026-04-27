@@ -1,4 +1,5 @@
 import type { CarModel } from "../features/listings/types";
+import { endpoints } from "../shared/api/endpoints";
 
 type ModelsResponse = {
   data: CarModel[];
@@ -6,7 +7,7 @@ type ModelsResponse = {
 
 export const getModels = async (manId: number): Promise<CarModel[]> => {
   const response = await fetch(
-    `https://api2.myauto.ge/ka/getManModels?man_id=${manId}`,
+    `${endpoints.modelsForManufacturer}?man_id=${manId}`,
   );
 
   if (!response.ok) {

@@ -7,15 +7,15 @@ A responsive React + TypeScript clone of the [myauto.ge](https://www.myauto.ge) 
 - **React 19** + **TypeScript** (Vite)
 - **Tailwind CSS 4** (via `@tailwindcss/vite`)
 - **TanStack Query** for data fetching, caching, and request deduplication
-- **Axios** + native `fetch` for API calls
+- Native `fetch` for all API calls
 - **ESLint** with TypeScript and React Hooks plugins
 
 ## Features
 
-- Live car listings from `api2.myauto.ge`
+- Live car listings from the myauto.ge API
 - Filter sidebar: vehicle type, manufacturer, model, category, price range, currency
-- Toolbar: sort order, period, search field
-- URL-synced filters (shareable links, browser back/forward works)
+- Toolbar: sort order, period
+- URL-synced filters: applied filters, page, period, sort and currency are written into the query string so they survive a hard refresh and can be shared as links
 - Pagination
 - Currency switcher (GEL / USD) with live rate conversion
 - Responsive `CarCard`:
@@ -36,10 +36,12 @@ src/
     components/              Listing-specific UI (CarCard, FilterSidebar, Toolbar, ...)
     hooks/                   useProducts, useManufacturers, useModels, useCategories, useCurrencies
     utils/                   Formatters, URL filter (de)serialization, image URL builder
+    constants.ts             Listing-specific constants
     types.ts                 API and domain types
   pages/
     ListingPage.tsx          Main listings page (assembles everything)
   shared/
+    api/                     API base URLs and endpoint paths (`endpoints.ts`)
     ui/                      Generic, reusable UI components
     utils/                   Shared helpers (e.g. `cn`)
   main.tsx                   Vite entry point
@@ -57,6 +59,23 @@ src/
 ```bash
 npm install
 ```
+
+### Configure environment (optional)
+
+The app ships with sensible defaults pointing at the public myauto.ge endpoints, so it runs without any setup. To override the base URLs (e.g. to point at a local proxy), copy the example file and edit it:
+
+```bash
+cp .env.example .env
+```
+
+Available variables:
+
+| Variable                | Default                       | Purpose                              |
+| ----------------------- | ----------------------------- | ------------------------------------ |
+| `VITE_API_BASE_URL`     | `https://api2.myauto.ge/ka`   | JSON API root                        |
+| `VITE_STATIC_BASE_URL`  | `https://static.my.ge`        | Static asset CDN (images, mans.json) |
+
+Both are read in `src/shared/api/endpoints.ts` and fall back to the production URLs when absent.
 
 ### Run the dev server
 
@@ -88,12 +107,13 @@ npm run lint
 
 ## API
 
-The app talks directly to the public myauto.ge API. No keys or auth are required:
+The app talks directly to the public myauto.ge API. No keys or auth are required. All URLs are derived from `VITE_API_BASE_URL` / `VITE_STATIC_BASE_URL` (see above) and are listed in `src/shared/api/endpoints.ts`:
 
-- `https://api2.myauto.ge/ka/products` — listings (filterable, paginated)
-- `https://api2.myauto.ge/ka/getManModels?man_id={id}` — models for a manufacturer
-- `https://api2.myauto.ge/ka/cats/get` — categories
-- `https://api2.myauto.ge/ka/currency` — currency rates
+- `${VITE_API_BASE_URL}/products` — listings (filterable, paginated)
+- `${VITE_API_BASE_URL}/getManModels?man_id={id}` — models for a manufacturer
+- `${VITE_API_BASE_URL}/cats/get` — categories
+- `${VITE_API_BASE_URL}/currency` — currency rates
+- `${VITE_STATIC_BASE_URL}/myauto/js/mans.json` — manufacturers (static JSON on the asset CDN)
 
 See `src/api/` for the request shapes and `src/features/listings/types.ts` for the response types.
 
