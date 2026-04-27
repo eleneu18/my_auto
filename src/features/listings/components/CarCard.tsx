@@ -123,6 +123,10 @@ const CarCard = ({
           <img
             src={imageUrl}
             alt={`${title} ${year}`}
+            loading="lazy"
+            decoding="async"
+            width={248}
+            height={144}
             className="h-64 w-full rounded-2xl object-cover lg:h-[144px] lg:w-full lg:rounded-lg"
           />
 
