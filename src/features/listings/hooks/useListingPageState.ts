@@ -206,6 +206,7 @@ export const useListingPageState = () => {
     cats,
     priceFrom: filters.priceFrom,
     priceTo: filters.priceTo,
+    currency: filters.currency,
     page,
   });
 

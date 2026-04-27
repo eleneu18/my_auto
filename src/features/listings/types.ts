@@ -98,6 +98,7 @@ export type Product = {
     cats?: string;
     priceFrom?: number;
     priceTo?: number;
+    currency?: Currency;
     period?: Period;
     sortOrder?: SortOrder;
     page?: number;

@@ -1,9 +1,14 @@
-import type { ProductFilters } from "../types";
+import type { Currency, ProductFilters } from "../types";
 
 const vehicleTypeToTypeId: Record<NonNullable<ProductFilters["vehicleType"]>, string> = {
   car: "0",
   tractor: "1",
   moto: "2",
+};
+
+const currencyToCurrencyId: Record<Currency, string> = {
+  gel: "3",
+  usd: "1",
 };
 
 export const buildSearchParams = (filters: ProductFilters) => {
@@ -19,6 +24,9 @@ export const buildSearchParams = (filters: ProductFilters) => {
   if (filters.cats) params.set("Cats", filters.cats);
   if (filters.priceFrom) params.set("PriceFrom", String(filters.priceFrom));
   if (filters.priceTo) params.set("PriceTo", String(filters.priceTo));
+  if (filters.currency) {
+    params.set("CurrencyID", currencyToCurrencyId[filters.currency]);
+  }
   if (filters.period) params.set("Period", filters.period);
   if (filters.sortOrder) params.set("SortOrder", String(filters.sortOrder));
   if (filters.page) params.set("Page", String(filters.page));
