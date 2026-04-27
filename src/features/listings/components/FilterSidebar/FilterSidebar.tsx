@@ -96,16 +96,13 @@ const FilterSidebar = ({
       <div className="space-y-5 p-6 pt-[22px]">
         <FilterSelect
           label="გარიგების ტიპი"
-          value={draft.forRent === undefined ? "" : String(draft.forRent)}
+          value={String(draft.forRent)}
           options={[
-            { label: "ყველა", value: "" },
             { label: "იყიდება", value: "0" },
             { label: "ქირავდება", value: "1" },
           ]}
           onChange={(value) =>
-            updateDraft({
-              forRent: value === "" ? undefined : (Number(value) as 0 | 1),
-            })
+            updateDraft({ forRent: Number(value) as 0 | 1 })
           }
         />
 

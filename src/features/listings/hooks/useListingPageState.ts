@@ -75,12 +75,7 @@ export const useListingPageState = () => {
   );
 
   const breadcrumbItems = useMemo(() => {
-    const lastLabel =
-      filters.forRent === 0
-        ? "იყიდება"
-        : filters.forRent === 1
-          ? "ქირავდება"
-          : "მანქანები";
+    const lastLabel = filters.forRent === 0 ? "იყიდება" : "ქირავდება";
 
     return [
       { label: "მთავარი", href: "/" },
@@ -91,9 +86,6 @@ export const useListingPageState = () => {
 
   const appliedFilterLabels = useMemo(() => {
     const labels: string[] = [];
-
-    if (filters.forRent === 0) labels.push("იყიდება");
-    if (filters.forRent === 1) labels.push("ქირავდება");
 
     manufacturerOptions.forEach((manufacturer) => {
       if (filters.manufacturerIds.includes(manufacturer.id)) {
@@ -137,10 +129,6 @@ export const useListingPageState = () => {
       );
       const model = modelOptions.find((option) => option.label === label);
       const category = categoryOptions.find((option) => option.label === label);
-
-      if (label === "იყიდება" || label === "ქირავდება") {
-        return { ...current, forRent: undefined };
-      }
 
       if (manufacturer) {
         return {

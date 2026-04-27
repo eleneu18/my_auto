@@ -110,7 +110,7 @@ export const parseFiltersFromUrl = (): {
       forRent:
         bargainType === "0" || bargainType === "1"
           ? (Number(bargainType) as 0 | 1)
-          : undefined,
+          : 0,
       manufacturerIds,
       modelIds,
       categoryIds: parseNumberList(vehicleCats),
@@ -131,9 +131,7 @@ export const buildUrlParamsFromFilters = (
 
   params.set("vehicleType", vehicleTypeToId[filters.vehicleType]);
 
-  if (filters.forRent !== undefined) {
-    params.set("bargainType", String(filters.forRent));
-  }
+  params.set("bargainType", String(filters.forRent));
 
   if (filters.manufacturerIds.length > 0) {
     params.set(

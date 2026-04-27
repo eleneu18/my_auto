@@ -107,7 +107,7 @@ export type Product = {
 
   export type AppliedListingFilters = {
     vehicleType: VehicleType;
-    forRent?: 0 | 1;
+    forRent: 0 | 1;
     manufacturerIds: number[];
     modelIds: number[];
     categoryIds: number[];
