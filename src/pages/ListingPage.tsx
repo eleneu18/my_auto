@@ -83,10 +83,8 @@ const ListingPage = () => {
     window.history.replaceState(null, "", nextUrl);
   }, [filters, page, period, sortOrder]);
 
-  const selectedManufacturerId = filters.manufacturerIds[0];
-
   const { data: manufacturers = [] } = useManufacturers();
-  const { data: models = [] } = useModels(selectedManufacturerId);
+  const { models, modelsByManufacturer } = useModels(filters.manufacturerIds);
   const { data: categories = [] } = useCategories();
   const { getCurrency } = useCurrencies();
 
@@ -229,10 +227,12 @@ const ListingPage = () => {
     filters.manufacturerIds.length > 0
       ? filters.manufacturerIds
           .map((manId) => {
-            const modelsForManufacturer = filters.modelIds;
+            const modelsForThisMan = (modelsByManufacturer.get(manId) ?? [])
+              .filter((model) => filters.modelIds.includes(model.model_id))
+              .map((model) => model.model_id);
 
-            return modelsForManufacturer.length > 0
-              ? `${manId}.${modelsForManufacturer.join(".")}`
+            return modelsForThisMan.length > 0
+              ? `${manId}.${modelsForThisMan.join(".")}`
               : String(manId);
           })
           .join("-")

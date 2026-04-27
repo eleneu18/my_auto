@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Button from "../../../../shared/ui/Button";
 import CategoryPillsSelect from "../CategoryPillsSelect";
-import MultiSelectDropdown from "../MultiSelectDropdown";
+import MultiSelectDropdown, {
+  type MultiSelectGroup,
+} from "../MultiSelectDropdown";
 import { useCategories } from "../../hooks/useCategories";
 import { useManufacturers } from "../../hooks/useManufacturers";
 import { useModels } from "../../hooks/useModels";
@@ -28,10 +30,8 @@ const FilterSidebar = ({
     setDraft(initialFilters);
   }, [initialFilters]);
 
-  const selectedManufacturerId = draft.manufacturerIds[0];
-
   const { data: manufacturers = [] } = useManufacturers();
-  const { data: models = [] } = useModels(selectedManufacturerId);
+  const { models, modelsByManufacturer } = useModels(draft.manufacturerIds);
   const { data: categories = [] } = useCategories();
 
   const updateDraft = (patch: Partial<AppliedListingFilters>) => {
@@ -47,6 +47,30 @@ const FilterSidebar = ({
     id: model.model_id,
     label: model.model_name,
   }));
+
+  const modelGroups = useMemo<MultiSelectGroup[]>(() => {
+    return [...draft.manufacturerIds].reverse().flatMap((manufacturerId) => {
+      const manufacturer = manufacturers.find(
+        (item) => Number(item.man_id) === manufacturerId,
+      );
+      const groupModels = modelsByManufacturer.get(manufacturerId);
+
+      if (!manufacturer || !groupModels || groupModels.length === 0) {
+        return [];
+      }
+
+      return [
+        {
+          id: manufacturerId,
+          label: manufacturer.man_name,
+          options: groupModels.map((model) => ({
+            id: model.model_id,
+            label: model.model_name,
+          })),
+        },
+      ];
+    });
+  }, [draft.manufacturerIds, manufacturers, modelsByManufacturer]);
 
   const categoryOptions = categories.map((category) => ({
     id: category.category_id,
@@ -103,6 +127,7 @@ const FilterSidebar = ({
           placeholder="ყველა მოდელი"
           selectedIds={draft.modelIds}
           options={modelOptions}
+          groups={modelGroups}
           disabled={draft.manufacturerIds.length === 0}
           onChange={(modelIds) => updateDraft({ modelIds })}
         />

@@ -8,6 +8,12 @@ type MultiSelectOption = {
   label: string;
 };
 
+export type MultiSelectGroup = {
+  id: number;
+  label: string;
+  options: MultiSelectOption[];
+};
+
 type MultiSelectDropdownProps = {
   label: string;
   placeholder: string;
@@ -15,7 +21,11 @@ type MultiSelectDropdownProps = {
   options: MultiSelectOption[];
   onChange: (ids: number[]) => void;
   disabled?: boolean;
+  groups?: MultiSelectGroup[];
+  pillsPerGroup?: number;
 };
+
+const DEFAULT_PILLS_PER_GROUP = 5;
 
 const MultiSelectDropdown = ({
   label,
@@ -24,11 +34,17 @@ const MultiSelectDropdown = ({
   options,
   onChange,
   disabled = false,
+  groups,
+  pillsPerGroup = DEFAULT_PILLS_PER_GROUP,
 }: MultiSelectDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const selectedOptions = options.filter((option) =>
+  const flatOptions = groups
+    ? groups.flatMap((group) => group.options)
+    : options;
+
+  const selectedOptions = flatOptions.filter((option) =>
     selectedIds.includes(option.id),
   );
 
@@ -118,33 +134,21 @@ const MultiSelectDropdown = ({
 
       {isOpen && !disabled && (
         <div className="absolute left-0 top-[72px] z-30 w-full rounded-[10px] bg-white p-4 shadow-[0_8px_24px_rgba(39,42,55,0.16)]">
-          <div className="max-h-[240px] overflow-y-auto pr-1">
-            <div className="space-y-3">
-              {options.map((option) => {
-                const isSelected = selectedIds.includes(option.id);
-
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => toggle(option.id)}
-                    className="flex w-full items-center gap-3 text-left text-[13px] text-[#454857]"
-                  >
-                    <span
-                      className={cn(
-                        "flex h-5 w-5 items-center justify-center rounded border",
-                        isSelected
-                          ? "border-[#26B753] bg-[#26B753] text-white"
-                          : "border-[#D8DBE2] bg-white",
-                      )}
-                    >
-                      {isSelected ? "✓" : ""}
-                    </span>
-                    {option.label}
-                  </button>
-                );
-              })}
-            </div>
+          <div className="max-h-[320px] overflow-y-auto pr-1">
+            {groups ? (
+              <GroupedOptions
+                groups={groups}
+                pillsPerGroup={pillsPerGroup}
+                selectedIds={selectedIds}
+                onToggle={toggle}
+              />
+            ) : (
+              <FlatOptions
+                options={options}
+                selectedIds={selectedIds}
+                onToggle={toggle}
+              />
+            )}
           </div>
 
           <Button
@@ -159,5 +163,124 @@ const MultiSelectDropdown = ({
     </div>
   );
 };
+
+type FlatOptionsProps = {
+  options: MultiSelectOption[];
+  selectedIds: number[];
+  onToggle: (id: number) => void;
+};
+
+const FlatOptions = ({ options, selectedIds, onToggle }: FlatOptionsProps) => (
+  <div className="space-y-3">
+    {options.map((option) => (
+      <CheckboxRow
+        key={option.id}
+        option={option}
+        isSelected={selectedIds.includes(option.id)}
+        onToggle={onToggle}
+      />
+    ))}
+  </div>
+);
+
+type GroupedOptionsProps = {
+  groups: MultiSelectGroup[];
+  pillsPerGroup: number;
+  selectedIds: number[];
+  onToggle: (id: number) => void;
+};
+
+const GroupedOptions = ({
+  groups,
+  pillsPerGroup,
+  selectedIds,
+  onToggle,
+}: GroupedOptionsProps) => (
+  <div className="space-y-5">
+    {groups.map((group) => {
+      const pillOptions = group.options.slice(0, pillsPerGroup);
+      const checkboxOptions = group.options.slice(pillsPerGroup);
+
+      return (
+        <div key={group.id} className="space-y-3">
+          <div className="font-tbcx text-[14px] font-bold text-[#272A37]">
+            {group.label}
+          </div>
+
+          {pillOptions.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {pillOptions.map((option) => (
+                <PillOption
+                  key={option.id}
+                  option={option}
+                  isSelected={selectedIds.includes(option.id)}
+                  onToggle={onToggle}
+                />
+              ))}
+            </div>
+          )}
+
+          {checkboxOptions.length > 0 && (
+            <div className="space-y-3">
+              {checkboxOptions.map((option) => (
+                <CheckboxRow
+                  key={option.id}
+                  option={option}
+                  isSelected={selectedIds.includes(option.id)}
+                  onToggle={onToggle}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+);
+
+type OptionRowProps = {
+  option: MultiSelectOption;
+  isSelected: boolean;
+  onToggle: (id: number) => void;
+};
+
+const PillOption = ({ option, isSelected, onToggle }: OptionRowProps) => (
+  <button
+    type="button"
+    onClick={() => onToggle(option.id)}
+    className={cn(
+      "rounded-[8px] border px-3 py-2 text-[12px] font-medium transition",
+      isSelected
+        ? "border-[#26B753] bg-[#F0FFF7] text-[#159947]"
+        : "border-[#E9EBF0] bg-white text-[#6F7383] hover:border-[#D8DBE2]",
+    )}
+  >
+    <span aria-hidden="true" className="mr-1">
+      {isSelected ? "✓" : "+"}
+    </span>
+    {option.label}
+  </button>
+);
+
+const CheckboxRow = ({ option, isSelected, onToggle }: OptionRowProps) => (
+  <button
+    type="button"
+    onClick={() => onToggle(option.id)}
+    className="flex w-full items-center gap-3 text-left text-[13px] text-[#454857]"
+  >
+    <span
+      aria-hidden="true"
+      className={cn(
+        "flex h-5 w-5 items-center justify-center rounded border",
+        isSelected
+          ? "border-[#26B753] bg-[#26B753] text-white"
+          : "border-[#D8DBE2] bg-white",
+      )}
+    >
+      {isSelected ? "✓" : ""}
+    </span>
+    {option.label}
+  </button>
+);
 
 export default MultiSelectDropdown;
