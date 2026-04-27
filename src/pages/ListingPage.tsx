@@ -14,6 +14,7 @@ import {
   getStickerTags,
   getVipLabel,
 } from "../features/listings/utils/listingDisplay";
+import { cn } from "../shared/utils/cn";
 
 const ListingPage = () => {
   const {
@@ -131,27 +132,40 @@ const ListingPage = () => {
         </div>
       </main>
 
-      {isFilterOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <button
-            type="button"
-            aria-label="Close filters"
-            onClick={() => setIsFilterOpen(false)}
-            className="absolute inset-0 bg-black/40"
-          />
+      <div
+        className={cn(
+          "fixed inset-0 z-50 md:hidden",
+          isFilterOpen ? "pointer-events-auto" : "pointer-events-none",
+        )}
+        aria-hidden={!isFilterOpen}
+      >
+        <button
+          type="button"
+          aria-label="Close filters"
+          tabIndex={isFilterOpen ? 0 : -1}
+          onClick={() => setIsFilterOpen(false)}
+          className={cn(
+            "absolute inset-0 bg-black/40 transition-opacity duration-300 ease-out",
+            isFilterOpen ? "opacity-100" : "opacity-0",
+          )}
+        />
 
-          <div className="absolute left-0 top-0 h-full w-[85%] max-w-[320px] overflow-y-auto bg-white">
-            <FilterSidebar
-              initialFilters={filters}
-              totalCount={total}
-              onApply={(nextFilters) => {
-                applyFilters(nextFilters);
-                setIsFilterOpen(false);
-              }}
-            />
-          </div>
+        <div
+          className={cn(
+            "absolute top-0 left-0 h-full w-[85%] max-w-[320px] overflow-y-auto bg-white transition-transform duration-300 ease-out will-change-transform",
+            isFilterOpen ? "translate-x-0" : "-translate-x-full",
+          )}
+        >
+          <FilterSidebar
+            initialFilters={filters}
+            totalCount={total}
+            onApply={(nextFilters) => {
+              applyFilters(nextFilters);
+              setIsFilterOpen(false);
+            }}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 };
