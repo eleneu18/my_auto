@@ -11,12 +11,26 @@ const AppliedFiltersBar = ({
   onClearOne,
   onOpenFilters,
 }: AppliedFiltersBarProps) => {
+  if (labels.length === 0) {
+    return (
+      <div className="scrollbar-hidden mb-4 flex gap-2 overflow-x-auto md:hidden">
+        <button
+          type="button"
+          onClick={onOpenFilters}
+          className="shrink-0 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37]"
+        >
+          ფილტრი
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="scrollbar-hidden mb-4 flex gap-2 overflow-x-auto md:hidden">
+    <div className="scrollbar-hidden mb-4 flex gap-2 overflow-x-auto">
       <button
         type="button"
         onClick={onOpenFilters}
-        className="shrink-0 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37]"
+        className="shrink-0 rounded-[10px] border border-[#D8DBE2] bg-white px-4 py-2 text-[12px] font-medium text-[#272A37] md:hidden"
       >
         ფილტრი
       </button>
