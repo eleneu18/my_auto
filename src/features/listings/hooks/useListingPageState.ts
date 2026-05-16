@@ -5,6 +5,7 @@ import { useCurrencies } from "./useCurrencies";
 import { useManufacturers } from "./useManufacturers";
 import { useModels } from "./useModels";
 import { useProducts } from "./useProducts";
+import { useStickers } from "./useStickers";
 import {
   buildUrlParamsFromFilters,
   parseFiltersFromUrl,
@@ -43,6 +44,7 @@ export const useListingPageState = () => {
   const { data: manufacturers = [] } = useManufacturers();
   const { models, modelsByManufacturer } = useModels(filters.manufacturerIds);
   const { data: categories = [] } = useCategories();
+  const { data: stickers = [] } = useStickers();
   const { getCurrency } = useCurrencies();
 
   const selectedCurrency = getCurrency(currency);
@@ -216,6 +218,7 @@ export const useListingPageState = () => {
     period,
     sortOrder,
     selectedCurrency,
+    stickers,
 
     isFilterOpen,
     setIsFilterOpen,

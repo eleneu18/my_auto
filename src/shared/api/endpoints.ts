@@ -18,4 +18,5 @@ export const endpoints = {
   currencies: `${API_BASE_URL}/currency`,
   manufacturers: `${STATIC_BASE_URL}/myauto/js/mans.json`,
   modelsForManufacturer: `${API_BASE_URL}/getManModels`,
+  quickMainData: `${API_BASE_URL}/services/quick-main-data/all/get`,
 } as const;

@@ -130,3 +130,18 @@ export type CurrencyApiResponse = {
   StatusMessage: string;
   Data: Record<string, CurrencyApiItem>;
 };
+
+
+export type Sticker = {
+  id: number;
+  key: string;
+  title: string;
+  forAuto: boolean;
+  adsCount: number;
+};
+
+export type QuickMainDataResponse = {
+  data: {
+    stickers: string;
+  } & Record<string, unknown>;
+};

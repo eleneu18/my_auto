@@ -22,6 +22,7 @@ const ListingPage = () => {
     period,
     sortOrder,
     selectedCurrency,
+    stickers,
     isFilterOpen,
     setIsFilterOpen,
     products,
@@ -113,7 +114,7 @@ const ListingPage = () => {
                       views={product.views}
                       orderDate={product.order_date}
                       vipLabel={getVipLabel(product.order_number)}
-                      stickers={getStickerTags(product.stickers)}
+                      stickers={getStickerTags(product.stickers, stickers)}
                       isGoodPrice={isGoodPrice}
                     />
                   );

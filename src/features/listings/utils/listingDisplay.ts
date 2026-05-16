@@ -1,3 +1,5 @@
+import type { Sticker } from "../types";
+
 export type StickerTag = {
   label: string;
   icon: "danger" | "goodCondition" | "clear";
@@ -13,22 +15,31 @@ export const getVipLabel = (orderNumber: number): VipLabel => {
   return null;
 };
 
-export const getStickerTags = (stickers: number | null): StickerTag[] => {
-  if (!stickers) return [];
+const STICKER_ICON_BY_ID: Record<number, StickerTag["icon"]> = {
+  23: "danger",
+  79: "danger",
+  31: "goodCondition",
+  3: "goodCondition",
+  17: "goodCondition",
+  5: "clear",
+  19: "clear",
+};
 
-  const tags: StickerTag[] = [];
+const DEFAULT_STICKER_ICON: StickerTag["icon"] = "clear";
 
-  if (stickers & 1) {
-    tags.push({ label: "სასწრაფოდ", icon: "danger" });
-  }
+export const getStickerTags = (
+  stickerId: number | null,
+  stickers: Sticker[] | undefined,
+): StickerTag[] => {
+  if (!stickerId || !stickers || stickers.length === 0) return [];
 
-  if (stickers & 2) {
-    tags.push({ label: "იდეალურ მდგომარეობაში", icon: "goodCondition" });
-  }
+  const sticker = stickers.find((item) => item.id === stickerId);
+  if (!sticker) return [];
 
-  if (stickers & 4) {
-    tags.push({ label: "სუფთა ისტორია", icon: "clear" });
-  }
-
-  return tags;
+  return [
+    {
+      label: sticker.title,
+      icon: STICKER_ICON_BY_ID[sticker.id] ?? DEFAULT_STICKER_ICON,
+    },
+  ];
 };
