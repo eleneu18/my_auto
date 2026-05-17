@@ -34,13 +34,6 @@ export const useListingPageState = () => {
     initialUrlState.filters,
   );
 
-  useEffect(() => {
-    const params = buildUrlParamsFromFilters(filters, page, period, sortOrder);
-    const nextUrl = `${window.location.pathname}?${params.toString()}`;
-
-    window.history.replaceState(null, "", nextUrl);
-  }, [filters, page, period, sortOrder]);
-
   const { data: manufacturers = [] } = useManufacturers();
   const { models, modelsByManufacturer } = useModels(filters.manufacturerIds);
   const { data: categories = [] } = useCategories();
@@ -48,6 +41,7 @@ export const useListingPageState = () => {
   const { getCurrency } = useCurrencies();
 
   const selectedCurrency = getCurrency(currency);
+
 
   const manufacturerOptions = useMemo(
     () =>
@@ -211,6 +205,13 @@ export const useListingPageState = () => {
     currency: filters.currency,
     page,
   });
+
+  useEffect(() => {
+    const params = buildUrlParamsFromFilters(filters, page, period, sortOrder, mans);
+    const nextUrl = `${window.location.pathname}?${params.toString()}`;
+
+    window.history.replaceState(null, "", nextUrl);
+  }, [filters, page, period, sortOrder, mans]);
 
   return {
     filters,

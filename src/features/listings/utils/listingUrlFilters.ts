@@ -87,7 +87,7 @@ export const parseFiltersFromUrl = (): {
 
   const manufacturerIds: number[] = [];
   const modelIds: number[] = [];
-
+  
   if (mansNModels) {
     mansNModels.split("-").forEach((group) => {
       const ids = parseNumberList(group);
@@ -126,24 +126,17 @@ export const buildUrlParamsFromFilters = (
   page: number,
   period: Period,
   sortOrder: SortOrder,
+  mans: string,
 ) => {
   const params = new URLSearchParams();
 
   params.set("vehicleType", vehicleTypeToId[filters.vehicleType]);
 
   params.set("bargainType", String(filters.forRent));
-
   if (filters.manufacturerIds.length > 0) {
     params.set(
       "mansNModels",
-      filters.manufacturerIds
-        .map((manufacturerId) => {
-          const modelPart =
-            filters.modelIds.length > 0 ? `.${filters.modelIds.join(".")}` : "";
-
-          return `${manufacturerId}${modelPart}`;
-        })
-        .join("-"),
+      mans
     );
   }
 
